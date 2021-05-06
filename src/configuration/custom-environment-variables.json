@@ -1,0 +1,20 @@
+{
+    "db": {
+        "server": "CONFIG_DB_HOST",
+
+        "database": "CONFIG_DB_NAME",
+
+        "user": "CONFIG_DB_USER",
+
+        "password": "CONFIG_DB_PASS"
+    },
+    "sqlStore": {
+        "host": "CONFIG_DB_HOST",
+
+        "database": "CONFIG_DB_NAME",
+
+        "user": "CONFIG_DB_USER",
+
+        "password": "CONFIG_DB_PASS"
+    }
+}

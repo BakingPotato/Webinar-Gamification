@@ -1,0 +1,17 @@
+{
+    "db":{
+        "server": "server",
+        "database": "database",
+        "user": "user",
+        "password": "password"
+    },
+    "sqlStore":{
+        "host": "host",
+        "database": "database",
+        "user": "user",
+        "password": "password",
+        "connectionLimit": 10,
+        "createDatabaseTable": true
+    },
+    "port": 9001
+}
