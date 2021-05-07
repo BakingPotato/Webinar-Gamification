@@ -12,22 +12,12 @@
     {{!-- ESTILOS --}}
     <link rel="stylesheet" href="/css/styles.css">
     {{!-- ICONOS --}}
-    <script src="https://kit.fontawesome.com/c7a5918e2f.js" crossorigin="anonymous"></script>
-</head>
+ <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous"></head>
 <body>
-    {{#if success }}
-        <div class="row">
-            <div class="col-md-4 mx-auto">
-                <div class="alert alert-success alert-dissmissible fade show" role="alert">
-                    {{success}}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+    {{>nav}}
 
-                    </button>
-                </div>
-            </div>
-        </div>
-    {{/if}}
+    {{>message}} 
+    
     {{{ body }}}
 </body>
 </html>

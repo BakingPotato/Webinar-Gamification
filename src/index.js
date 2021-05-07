@@ -5,9 +5,9 @@ const handlebars = require('express-handlebars');
 const validator = require('express-validator');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const flash = require('connect-flash');
 const session = require('express-session');
-const MySQLStore = require('express-mysql-session')(session);
+const flash = require('connect-flash');
+const mssql = require('mssql');
 
 process.env["NODE_CONFIG_DIR"] = path.join(__dirname, "configuration");
 
@@ -17,6 +17,8 @@ const config = require('config');
 //Inicializamos express
 const app = express();
 require('./lib/passport');
+
+const pool = mssql.connect(config.db); //Crea una conexion a una base de datos
 
 app.set('port', config.port)
 app.set('views', path.join(__dirname, "views"))
@@ -29,11 +31,17 @@ app.engine('.hbs', handlebars({
 }));
 app.set('view engine', '.hbs');
 
+const options = {
+    connection: mssql.connect(config.db),
+    ttl: 3600,
+    reapInterval: 3600,
+    reapCallback: function() {console.log('expired sessions were removed');}
+};
+
 app.use(session({
-    secret: 'faztmysqlnodess',
+    secret: 'supersecret',
     resave: false,
     saveUninitialized: false
-    //store: new MySQLStore(config.sqlStore)
 }))
 app.use(flash());
 
@@ -50,15 +58,16 @@ app.use(passport.session());
 //Variables Globales
 app.use((req, res, next) => {
     app.locals.success = req.flash('success')
-    app.locals.success = req.flash('message');
+    app.locals.message = req.flash('message');
     app.locals.user = req.user;
+    app.locals.seminariosAct = req.seminariosAct;
     next();  
 })
 
 // Rutas
 app.use(require('./routes'));
 app.use(require('./routes/login'));
-app.use(require('./routes/menuUser'));
+app.use(require('./routes/perfil'));
 app.use( require('./routes/menuAdmin'));
 
 // Codigo Publico

@@ -1,19 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('passport');
 
-//Importamos la conexión a la base de datos
-const pool = require = ('../database');
+const passport = require('passport');
+const { isLoggedIn } = require('../lib/auth');
 
 router.get('/registro', (req, res)=> {
     res.render('login/singup')
 });
 
 router.post('/registro', passport.authenticate('local.registro', {
-        successRedirect: '/profile',
-        faiulureRedirect: '/registro',
+        successRedirect: '/perfil',
+        failureRedirect: '/registro',
         failureFlash: true
-}));
+    }));
 
 router.get('/inicio', (req, res) => {
     res.render('login/singin')
@@ -21,14 +20,15 @@ router.get('/inicio', (req, res) => {
 
 router.post('/inicio', (req, res, next) => {
         passport.authenticate('local.inicio', {
-            successRedirect: '/profile',
-            faiulureRedirect: '/inicio',
+            successRedirect: '/perfil',
+            failureRedirect: '/inicio',
             failureFlash: true
         })(req, res, next);
 });
 
-router.get('/profile',  (req, res) => {
-    res.send('this is your profile');
-});
+router.get('/salir', isLoggedIn, (req, res) => {
+    req.logOut();
+    req.redirect('inicio');
+})
 
 module.exports = router;

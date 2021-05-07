@@ -16,14 +16,15 @@ passport.use('local.inicio', new LocalStrategy({
     
     if(result.recordset.length > 0) {
         const user = result.recordset[0];
-        const validPass = helpers.matchPassword(password, user.DS_PASS);
+        const validPass = password == user.DS_PASS//await helpers.matchPassword(password, user.DS_PASS.plaintext);
         if(validPass){
-            return done(null, user, req.flash('Bienvenido ' + user.DS_NOMBRE));
+            req.session.usuario = user;
+            return done(null, user, req.flash('success', 'Bienvenido ' + user.DS_NOMBRE));
         }else{
-            done(null, false, req.flash('Contraseña incorrecta'))
+            done(null, false, req.flash('message', 'Contraseña incorrecta'))
         }
     } else {
-        return done(null, false, req.flash('No se ha encontrado su dirección de correo'))
+        return done(null, false, req.flash('message', 'No se ha encontrado su dirección de correo'))
     }
 }))
 
@@ -35,23 +36,28 @@ passport.use('local.registro', new LocalStrategy({
     const { name, descripcion } = req.body;
 
     const newUser = {
-        username,
-        name,
-        descripcion,
-        password
+        "DS_CORREO" : username,
+        "DS_NOMBRE": name,
+        "DS_DESCRIPCION": descripcion,
+        "DS_PASS" : password,
+        "NM_PUNTOS": 0,
+        "ES_ADMIN": 0,
+        "DS_TWITTER": ""
+
     }
-    newUser.password = await helpers.encryptPassword(password);
+    //newUser.password = await helpers.encryptPassword(password);
 
     const request = new pool.Request();
     const result = await request
-        .input("DS_CORREO", pool.VarChar(50), newUser.username)
-        .input("DS_NOMBRE", pool.VarChar(50), newUser.name)
-        .input("DS_DESCRIPCION", pool.VarChar(250), newUser.descripcion)
-        .input("DS_PASS", pool.VarChar(50), newUser.password)
+        .input("DS_CORREO", pool.VarChar(50), newUser.DS_CORREO)
+        .input("DS_NOMBRE", pool.VarChar(50), newUser.DS_NOMBRE)
+        .input("DS_DESCRIPCION", pool.VarChar(250), newUser.DS_DESCRIPCION)
+        .input("DS_PASS", pool.VarChar(50), newUser.DS_PASS)
         .input("ES_ADMIN", pool.Bit, 0)
         .execute('REGISTRAR_USUARIO')
     newUser.CD_USUARIO = result.returnValue
-    return done(null, newUser);
+    req.session.usuario = newUser;
+    return done(null, newUser, req.flash('success', 'Bienvenido ' + newUser.DS_NOMBRE));
 }))
 
 passport.serializeUser((user, done)=>{
