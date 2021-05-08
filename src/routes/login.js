@@ -28,7 +28,7 @@ router.post('/inicio', (req, res, next) => {
 
 router.get('/salir', isLoggedIn, (req, res) => {
     req.logOut();
-    req.redirect('inicio');
+    res.redirect('inicio');
 })
 
 module.exports = router;
