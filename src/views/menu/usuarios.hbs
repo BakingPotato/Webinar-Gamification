@@ -1,0 +1,31 @@
+<div class="container p-4">
+    <div class="row">
+    USUARIOS
+        <table class="default">
+            <tr><th>Nombre</th><th>Nombre twitter</th><th>Descripción</th><th>Puntuación</th><th>Rol</th><th>Oermisos</th></tr>
+        {{#each usuarios}}
+            <tr><td>{{DS_NOMBRE}}</td><td>{{DS_TWITTER}}</td><td>{{DS_DESCRIPCION}}</td><td>{{NM_PUNTOS}}</td>
+            {{#if ES_ADMIN }}
+                <td>Administrador</td>
+                <td><a class="btn btn-secondary" href="usuarios/quitarRol/{{CD_USUARIO}}">
+                    Quitarle Admin
+                </a></td>
+            {{else}}
+                <td>Usuario</td>
+                <td><a class="btn btn-secondary" href="usuarios/otorgarRol/{{CD_USUARIO}}">
+                    Otorgarle Admin
+                </a></td>
+            {{/if}}
+            </tr>
+        {{/each}}
+        </table>
+    </div>
+</div>
+
+<div class="container p-4">
+    <div class="row">
+        <a class="btn btn-secondary" href="usuarios/actualizar">
+            Actualizar
+        </a>
+    </div>
+</div>

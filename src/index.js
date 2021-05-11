@@ -68,7 +68,7 @@ app.use((req, res, next) => {
 app.use(require('./routes'));
 app.use(require('./routes/login'));
 app.use(require('./routes/perfil'));
-app.use( require('./routes/menuAdmin'));
+app.use( require('./routes/seminario'));
 
 // Codigo Publico
 app.use(express.static(path.join(__dirname, 'public')));

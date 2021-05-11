@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const dbConnect = require('../Memory')
-const { isLoggedIn } = require('../lib/auth');
+const { isLoggedIn, isLoggedInAndAdmin } = require('../lib/auth');
 
 //Menu de usuario
 router.get('/perfil', isLoggedIn, async (req, res) => {
@@ -58,8 +58,47 @@ router.post('/PerfilA/registrarSeminario', isLoggedIn, async (req, res) => {
         req.flash('success', 'Seminario registrado correctamente');
         res.redirect('/PerfilA');
     }
-   
 });
+
+router.get('/PerfilA', isLoggedInAndAdmin, async (req, res) => {
+    let seminarios = await getSeminarios(req);
+    res.render('menu/perfilA', {seminarios});
+});
+
+router.get('/PerfilA/usuarios', isLoggedInAndAdmin, async (req, res) => {
+    let usuarios = await getUsuarios(req);
+    res.render('menu/usuarios', {usuarios});
+});
+
+router.get('/PerfilA/usuarios/actualizar', isLoggedInAndAdmin, async (req, res) => {
+    req.session.usuarios = null; //Reiniciamos la lista local de usuarios para volver a llenarla con lo que haya en la base de datos
+    res.redirect('/PerfilA/usuarios')
+});
+
+router.get('/PerfilA/usuarios/quitarRol/:id', isLoggedInAndAdmin, async (req, res) => {
+    const { id }  = req.params;
+    if(id == req.session.usuario.CD_USUARIO){
+        req.flash('message', 'Lamentablemente, no puedes quitarte el rol a ti mismo.');
+        res.redirect('/PerfilA/usuarios');
+    }
+    await dbConnect.prototype.quitarRoldeAdmin(id);
+    req.session.usuarios[id].ES_ADMIN = 0;
+    req.flash('success', 'El usuario ha sido despojado de sus privilegios de admin')
+    res.redirect('/PerfilA/usuarios');
+});
+
+router.get('/PerfilA/usuarios/otorgarRol/:id', isLoggedInAndAdmin, async (req, res) => {
+    const { id }  = req.params;
+    if(id == req.session.usuario.CD_USUARIO){
+        req.flash('message', 'Lamentablemente, no puedes quitarte el rol a ti mismo.');
+        res.redirect('/PerfilA/usuarios');
+    }
+    await dbConnect.prototype.añadirRoldeAdmin(id);
+    req.session.usuarios[id].ES_ADMIN = 1;
+    req.flash('success', 'El usuario ha sido bendecido con privilegios de admin')
+    res.redirect('/PerfilA/usuarios');
+});
+
 
 async function getSeminarios(req){
     let seminarios = {};
@@ -74,6 +113,21 @@ async function getSeminarios(req){
         seminarios = req.session.seminarios;
     }
     return seminarios;
+}
+
+async function getUsuarios(req){
+    let usuarios = {};
+    if(!req.session.usuarios){
+        usuarios = await dbConnect.prototype.getUsuarios();
+        req.session.usuarios = {};
+        for(let i in usuarios){
+            req.session.usuarios[usuarios[i].CD_USUARIO] = usuarios[i];
+        }
+    }
+    else{
+        usuarios = req.session.usuarios;
+    }
+    return usuarios;
 }
 
 module.exports = router;
