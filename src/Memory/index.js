@@ -17,6 +17,16 @@ class databaseConnect extends IDriver {
         return result.recordset;
     }
 
+    async getPonentes(req){
+        const request = new pool.Request();
+        const result = await request
+        .input("CD_ORIGEN", pool.Int, req.session.usuario.CD_USUARIO)
+        .input("CD_SEMINARIO", pool.Int, req.session.seminario.CD_SEMINARIO)
+        .execute('OBTENER_PONENTES')
+        return result.recordset;
+    }
+
+
     async getUsuariosSeminario(){
         const request = new pool.Request();
         const result = await request
@@ -78,9 +88,10 @@ class databaseConnect extends IDriver {
     async votarPonente(req){
         const request = new pool.Request();
         const result = await request
-        .input("CD_USUARIO", pool.Int, req.session.usuario.CD_USUARIO)
+        .input("CD_ORIGEN", pool.Int, req.session.usuario.CD_USUARIO)
         .input("CD_SEMINARIO", pool.Int,  req.session.seminario.CD_SEMINARIO)
-        .input("NM_PUNTOS", pool.Int, req.body.NM_PUNTOS)
+        .input("CD_DESTINO", pool.Int, req.params.id)
+        .input("NM_PUNTOS", pool.Int, 5)
         .execute('SUMAR_VOTOS_A_USUARIO')
         return result.returnValue;
     }
@@ -129,18 +140,19 @@ class databaseConnect extends IDriver {
         const request = new pool.Request();
         const result = await request
         .input("CD_ORIGEN", pool.Int, req.session.usuario.CD_USUARIO)
-        .input("CD_DIRIGIDO", pool.Int, req.body.CD_DIRIGIDO)
+        .input("CD_DIRIGIDO", pool.Int, req.params.id)
         .input("CD_SEMINARIO", pool.Int,  req.session.seminario.CD_SEMINARIO)
         .input("DS_CUESTION", pool.VarChar(250), req.body.DS_CUESTION)
         .execute('USUARIO_ES_PONENTE_SEMINARIO')
         return result.returnValue;
     }
 
-    
     async votarPregunta(req){
         const request = new pool.Request();
         const result = await request
-        .input("CD_CUESTION", pool.Int, req.params.p_id)
+        .input("CD_CUESTION", pool.Int, req.params.id)
+        .input("CD_ORIGEN", pool.Int, req.session.usuario.CD_USUARIO)
+        .input("CD_SEMINARIO", pool.Int,  req.session.seminario.CD_SEMINARIO)
         .input("NM_VOTOS", pool.Int, req.body.NM_VOTOS)
         .execute('SUMAR_VOTOS_A_PREGUNTA')
         return result.returnValue;

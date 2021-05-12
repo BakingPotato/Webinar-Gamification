@@ -1,0 +1,29 @@
+<div class="container p-4">
+    <div class="row">
+    Ponentes del seminario
+        <table class="default">
+            <tr><th>Nombre</th><th>Nombre twitter</th><th>Descripción</th><th>Puntuación</th></tr>
+        {{#each ponentes}}
+            <tr><td>{{DS_NOMBRE}}</td><td>{{DS_TWITTER}}</td><td>{{DS_DESCRIPCION}}</td><td>{{NM_PUNTOS}}</td>
+            {{#if VOTADO }}
+                <td><a class="btn btn-secondary" disabled="disabled" href="">
+                    Votado
+                </a></td>
+            {{else}}
+                <td><a class="btn btn-secondary" href="ponentes/votar/{{CD_USUARIO}}">
+                    Votar
+                </a></td>
+            {{/if}}
+            </tr>
+        {{/each}}
+        </table>
+    </div>
+</div>
+
+<div class="container p-4">
+    <div class="row">
+        <a class="btn btn-secondary" href="ponentes/actualizar">
+            Actualizar
+        </a>
+    </div>
+</div>

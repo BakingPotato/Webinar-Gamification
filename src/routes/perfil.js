@@ -22,7 +22,8 @@ router.post('/perfil/registro/:id', isLoggedIn, async (req, res) => {
     const { id }  = req.params;
     if(req.body.pass == req.session.seminarios[id].DS_PASS){
         await dbConnect.prototype.registrarseEnSeminario(req, id);
-        res.redirect('/seminario/'+ id);
+        req.session.seminario = req.session.seminarios[id];
+        res.redirect('/seminario');
     }else{
         req.flash('message', 'Clave incorrecta, pruebe de nuevo');
         res.redirect('/perfil/registro/' + id);
