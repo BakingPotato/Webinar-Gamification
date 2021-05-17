@@ -1,0 +1,36 @@
+<div class="container p-4">
+    <div class="row">
+    Usuarios del seminario
+        <table class="default">
+            <tr><th>Nombre</th><th>Nombre twitter</th><th>Rol</th><th>Puntuación</th></tr>
+        {{#each usuarios}}
+            <tr><td>{{DS_NOMBRE}}</td><td>{{DS_TWITTER}}</td>
+            {{#if ../soyAdmin }}
+                {{#if ES_PONENTE }}
+                    <td>Ponente</td>
+                {{else}}
+                    <td><a class="btn btn-secondary" href="usuarios/otorgarPonente/{{CD_USUARIO}}">
+                        Otorgar Ponente
+                    </a></td>
+                {{/if}}
+            {{else}}
+                {{#if ES_PONENTE }}
+                    <td>Usuario</td>
+                {{else}}
+                    <td>Ponente</td>
+                {{/if}}
+            {{/if}}
+            <td>{{NM_PUNTOS}}</td>
+            </tr>
+        {{/each}}
+        </table>
+    </div>
+</div>
+
+<div class="container p-4">
+    <div class="row">
+        <a class="btn btn-secondary" href="usuarios/actualizar">
+            Actualizar
+        </a>
+    </div>
+</div>

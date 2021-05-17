@@ -5,6 +5,9 @@
             <tr><th>Nombre</th><th>Nombre twitter</th><th>Descripción</th><th>Puntuación</th></tr>
         {{#each ponentes}}
             <tr><td>{{DS_NOMBRE}}</td><td>{{DS_TWITTER}}</td><td>{{DS_DESCRIPCION}}</td><td>{{NM_PUNTOS}}</td>
+                <td><a class="btn btn-secondary" href="ponentes/preguntar/{{CD_USUARIO}}">
+                    Preguntar
+                </a></td>
             {{#if VOTADO }}
                 <td><a class="btn btn-secondary" disabled="disabled" href="">
                     Votado
@@ -15,6 +18,12 @@
                 </a></td>
             {{/if}}
             </tr>
+        {{else}}
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center">
+                <p>No hay ponentes aún, espere un poco</p>
+            </div>
+        </div>
         {{/each}}
         </table>
     </div>

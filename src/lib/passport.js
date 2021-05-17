@@ -15,7 +15,8 @@ passport.use('local.inicio', new LocalStrategy({
         .execute('OBTENER_USUARIO_POR_LOGIN')
     
     if(result.recordset.length > 0) {
-        const user = result.recordset[0];
+        let user = result.recordset[0];
+        user.ESTA_EN_SEMINARIO = 0;
         const validPass = password == user.DS_PASS//await helpers.matchPassword(password, user.DS_PASS.plaintext);
         if(validPass){
             req.session.usuario = user;
@@ -42,6 +43,7 @@ passport.use('local.registro', new LocalStrategy({
         "DS_PASS" : password,
         "NM_PUNTOS": 0,
         "ES_ADMIN": 0,
+        "ESTA_EN_SEMINARIO": 0,
         "DS_TWITTER": ""
 
     }

@@ -9,29 +9,32 @@ router.get('/perfil', isLoggedIn, async (req, res) => {
         res.redirect('/PerfilA')
     }else{
         let seminarios = await getSeminarios(req);
-        res.render('menu/perfil', {seminarios});
+        let seminario = req.session.usuario.EN_SEMINARIO;
+        res.render('menu/perfil', {seminarios, seminario});
     }
 });
 
 router.get('/perfil/registro/:id', isLoggedIn, (req, res) => {
-    const seminario = req.session.seminarios[req.params.id];
-    res.render('menu/registro', {seminario});
+    const seminarios = req.session.seminarios[req.params.id];
+    let seminario = req.session.usuario.EN_SEMINARIO;
+    res.render('menu/registro', {seminarios, seminario});
 });
 
 router.post('/perfil/registro/:id', isLoggedIn, async (req, res) => {
     const { id }  = req.params;
     if(req.body.pass == req.session.seminarios[id].DS_PASS){
         await dbConnect.prototype.registrarseEnSeminario(req, id);
+        req.session.seminario = null;
         req.session.seminario = req.session.seminarios[id];
-        res.redirect('/seminario');
+        req.session.usuario.EN_SEMINARIO = true;
+        res.redirect('/seminario/ponentes');
     }else{
         req.flash('message', 'Clave incorrecta, pruebe de nuevo');
         res.redirect('/perfil/registro/' + id);
     }
 });
-
 router.post('/perfil/actualizarPerfil', isLoggedIn, async (req, res) => {
-    const newUser = await dbConnect.prototype.actualizarUsuario(req);
+    await dbConnect.prototype.actualizarUsuario(req);
     req.flash('success', 'Su usuario se actualizo correctamente');
     if(req.session.usuario.ES_ADMIN == 0){
         res.redirect('/perfil');
@@ -46,7 +49,8 @@ router.get('/PerfilA', isLoggedIn, async (req, res) => {
         res.redirect('/perfil')
     }
     let seminarios = await getSeminarios(req);
-    res.render('menu/perfilA', {seminarios});
+    let seminario = req.session.usuario.EN_SEMINARIO;
+    res.render('menu/perfilA', {seminarios, seminario});
 });
 
 router.post('/PerfilA/registrarSeminario', isLoggedIn, async (req, res) => {
@@ -63,12 +67,14 @@ router.post('/PerfilA/registrarSeminario', isLoggedIn, async (req, res) => {
 
 router.get('/PerfilA', isLoggedInAndAdmin, async (req, res) => {
     let seminarios = await getSeminarios(req);
-    res.render('menu/perfilA', {seminarios});
+    let seminario = req.session.usuario.EN_SEMINARIO;
+    res.render('menu/perfilA', {seminarios, seminario});
 });
 
 router.get('/PerfilA/usuarios', isLoggedInAndAdmin, async (req, res) => {
     let usuarios = await getUsuarios(req);
-    res.render('menu/usuarios', {usuarios});
+    let seminario = req.session.usuario.EN_SEMINARIO;
+    res.render('menu/usuarios', {usuarios, seminario});
 });
 
 router.get('/PerfilA/usuarios/actualizar', isLoggedInAndAdmin, async (req, res) => {
@@ -88,13 +94,22 @@ router.get('/PerfilA/usuarios/quitarRol/:id', isLoggedInAndAdmin, async (req, re
     res.redirect('/PerfilA/usuarios');
 });
 
+router.get('/PerfilA/seminario/administrador/:id', isLoggedInAndAdmin, async (req, res) => {
+    const { id }  = req.params;
+    await dbConnect.prototype.registrarseEnSeminario(req, id);
+    req.session.seminario = null;
+    req.session.seminario = req.session.seminarios[id];
+    req.session.usuario.EN_SEMINARIO = true;
+    res.redirect('/seminario/ponentes');
+});
+
 router.get('/PerfilA/usuarios/otorgarRol/:id', isLoggedInAndAdmin, async (req, res) => {
     const { id }  = req.params;
     if(id == req.session.usuario.CD_USUARIO){
         req.flash('message', 'Lamentablemente, no puedes quitarte el rol a ti mismo.');
         res.redirect('/PerfilA/usuarios');
     }
-    await dbConnect.prototype.añadirRoldeAdmin(id);
+    await dbConnect.prototype.añadirRoldeAdmin(req);
     req.session.usuarios[id].ES_ADMIN = 1;
     req.flash('success', 'El usuario ha sido bendecido con privilegios de admin')
     res.redirect('/PerfilA/usuarios');

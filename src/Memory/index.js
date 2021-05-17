@@ -27,7 +27,7 @@ class databaseConnect extends IDriver {
     }
 
 
-    async getUsuariosSeminario(){
+    async getUsuariosSeminario(req){
         const request = new pool.Request();
         const result = await request
         .input("CD_SEMINARIO", pool.Int, req.session.seminario.CD_SEMINARIO)
@@ -67,23 +67,24 @@ class databaseConnect extends IDriver {
         return result.returnValue;
     }
 
-    async añadirRoldePonente(usuarioID, seminarioID){
-        const request = new pool.Request();
-        const result = await request
-        .input("CD_USUARIO", pool.Int, usuarioID)
-        .input("CD_SEMINARIO", pool.Int, seminarioID)
-        .execute('USUARIO_ES_PONENTE_SEMINARIO')
-        return result.returnValue;
-    }
-
-    async añadirRoldePonente(id){
+    async añadirRoldeAdmin(id){
         const request = new pool.Request();
         const result = await request
         .input("CD_USUARIO", pool.Int, id)
-        .input("ES_PONENTE", pool.Bit, 1)
+        .input("ES_ADMIN", pool.Bit, 1)
         .execute('ACTUALIZAR_USUARIO')
         return result.returnValue;
     }
+
+    async añadirRoldePonente(req){
+        const request = new pool.Request();
+        const result = await request
+        .input("CD_USUARIO", pool.Int, req.params.id)
+        .input("CD_SEMINARIO", pool.Int, req.session.seminario.CD_SEMINARIO)
+        .execute('OTORGAR_PONENTE_A_USUARIO')
+        return result.returnValue;
+    }
+
 
     async votarPonente(req){
         const request = new pool.Request();
@@ -132,18 +133,19 @@ class databaseConnect extends IDriver {
         const request = new pool.Request();
         const result = await request
         .input("CD_SEMINARIO", pool.Int, req.session.seminario.CD_SEMINARIO)
+        .input("CD_USUARIO", pool.Int, req.session.usuario.CD_USUARIO)
         .execute('OBTENER_RANKING_PREGUNTAS')
         return result.recordset;
     }
 
-    async crearPreguntas(req){
+    async crearPregunta(req){
         const request = new pool.Request();
         const result = await request
         .input("CD_ORIGEN", pool.Int, req.session.usuario.CD_USUARIO)
-        .input("CD_DIRIGIDO", pool.Int, req.params.id)
+        .input("CD_DIRIGIDO", pool.Int, req.session.seminario.CD_DIRIGIDO)
         .input("CD_SEMINARIO", pool.Int,  req.session.seminario.CD_SEMINARIO)
         .input("DS_CUESTION", pool.VarChar(250), req.body.DS_CUESTION)
-        .execute('USUARIO_ES_PONENTE_SEMINARIO')
+        .execute('REGISTRAR_PREGUNTA')
         return result.returnValue;
     }
 
@@ -153,7 +155,7 @@ class databaseConnect extends IDriver {
         .input("CD_CUESTION", pool.Int, req.params.id)
         .input("CD_ORIGEN", pool.Int, req.session.usuario.CD_USUARIO)
         .input("CD_SEMINARIO", pool.Int,  req.session.seminario.CD_SEMINARIO)
-        .input("NM_VOTOS", pool.Int, req.body.NM_VOTOS)
+        .input("NM_VOTOS", pool.Int, 5)
         .execute('SUMAR_VOTOS_A_PREGUNTA')
         return result.returnValue;
     }

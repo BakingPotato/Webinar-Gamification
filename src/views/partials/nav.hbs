@@ -9,17 +9,27 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
+        {{#if seminario}}
+            <li class="nav-item">
+              <a class="nav-link" href="/seminario/preguntas">Preguntas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/seminario/usuarios">Asistentes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/seminario/ponentes">Ponentes</a>
+            </li>
+        {{/if}}
         {{#if user}}
           {{#if user.ES_ADMIN}}
             <li class="nav-item">
-              <a class="nav-link" href="PerfilA/usuarios">Usuarios</a>
+              <a class="nav-link" href="/PerfilA/usuarios">Usuarios</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="PerfilA/seminarios">Seminarios</a>
+              <a class="nav-link" href="/PerfilA/seminarios">Seminarios</a>
             </li>
-            {{!-- Perfil esta aqui para testear, eliminar --}}
             <li class="nav-item">
-              <a class="nav-link" href="/perfil">Perfil</a>
+              <a class="nav-link" href="/PerfilA">Perfil</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/salir">Cerrar sesión</a>

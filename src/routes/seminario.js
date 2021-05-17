@@ -14,7 +14,8 @@ router.get('/seminario', isLoggedIn, async (req, res) => {
 
 router.get('/seminario/ponentes', isLoggedIn, async (req, res) => {
     let ponentes = await getPonentes(req);
-    res.render('seminario/ponentes', {ponentes});
+    let seminario = true;
+    res.render('seminario/ponentes', {ponentes, seminario});
 });
 
 router.get('/seminario/ponentes/votar/:id', isLoggedIn, async (req, res) => {
@@ -36,9 +37,76 @@ router.get('/seminario/ponentes/votar/:id', isLoggedIn, async (req, res) => {
 
 
 router.get('/seminario/ponentes/actualizar', isLoggedIn, async (req, res) => {
-    req.session.seminario.ponente = null; //Reiniciamos la lista local de usuarios para volver a llenarla con lo que haya en la base de datos
+    req.session.seminario.ponentes = null; //Reiniciamos la lista local de usuarios para volver a llenarla con lo que haya en la base de datos
     res.redirect('/seminario/ponentes')
 });
+
+router.get('/seminario/ponentes/preguntar/:id', isLoggedIn, async (req, res) => {
+    req.session.seminario.CD_DIRIGIDO = req.params.id;
+    let seminario = true;
+    res.render('seminario/preguntaNueva', {seminario})
+});
+
+router.post('/seminario/ponentes/preguntar', isLoggedIn, async (req, res) => {
+    await dbConnect.prototype.crearPregunta(req);
+    req.session.seminario.CD_DIRIGIDO = null;
+    req.flash("success", "Su pregunta ha sido realizada");
+    res.redirect('/seminario/ponentes')
+});
+
+router.get('/seminario/usuarios', isLoggedIn, async (req, res) => {
+    let usuarios = await getUsuarios(req);
+    let soyAdmin = req.session.usuario.ES_ADMIN;
+    let seminario = true;
+    res.render('seminario/usuario', {usuarios, seminario, soyAdmin});
+});
+
+router.get('/seminario/usuarios/actualizar', isLoggedIn, async (req, res) => {
+    req.session.seminario.usuarios = null; //Reiniciamos la lista local de usuarios para volver a llenarla con lo que haya en la base de datos
+    res.redirect('/seminario/usuarios')
+});
+
+router.get('/seminario/usuarios/otorgarPonente/:id', isLoggedInAndAdmin, async (req, res) => {
+        const { id }  = req.params;
+        if(id == req.session.usuario.CD_USUARIO){
+            req.flash('message', 'Lamentablemente, no puedes darte el rol a ti mismo.');
+            res.redirect('/seminario/usuarios');
+        }
+        await dbConnect.prototype.añadirRoldePonente(req);
+        req.session.seminario.usuarios[id].ES_PONENTE = 1;
+        req.flash('success', 'El usuario es ahora ponente de este seminario')
+        res.redirect('/seminario/usuarios');
+});
+
+router.get('/seminario/preguntas', isLoggedIn, async (req, res) => {
+    let preguntas = await getPreguntas(req);
+    let seminario = true;
+    res.render('seminario/preguntas', {preguntas, seminario});
+});
+
+
+router.get('/seminario/preguntas/votar/:id', isLoggedIn, async (req, res) => {
+    const { id }  = req.params;
+    if(req.session.seminario.preguntas[id].VOTADO ){
+        req.flash("message", "Eres listo, pero no lo suficiente");
+        res.redirect('/seminario/preguntas');
+    }else if(req.session.usuario.CD_USUARIO == id ){
+        req.flash("message", "No puedes votarte a ti mismo");
+        res.redirect('/seminario/preguntas');
+    }else{
+        req.session.seminario.preguntas[id].VOTADO = true;
+        req.session.seminario.preguntas[id].NM_VOTOS += 5;
+        await dbConnect.prototype.votarPregunta(req);
+        req.flash("success", "Su voto fue emitido con éxito");
+        res.redirect('/seminario/preguntas');    
+    }
+});
+
+router.get('/seminario/preguntas/actualizar', isLoggedIn, async (req, res) => {
+    req.session.seminario.preguntas = null; //Reiniciamos la lista local de usuarios para volver a llenarla con lo que haya en la base de datos
+    res.redirect('/seminario/preguntas')
+});
+
 
 
 async function getPreguntas(req){
@@ -64,11 +132,27 @@ async function getPonentes(req){
         for(let i in ponentes){
             req.session.seminario.ponentes[ponentes[i].CD_USUARIO] = ponentes[i];
         }
+        if(req.session.seminario.ponentes[req.session.usuario.CD_USUARIO]) req.session.usuario.ES_PONENTE = true;
     }
     else{
         ponentes = req.session.seminario.ponentes;
     }
     return ponentes;
+}
+
+async function getUsuarios(req){
+    let usuarios = {};
+    if(!req.session.seminario.usuarios){
+        usuarios = await dbConnect.prototype.getUsuariosSeminario(req);
+        req.session.seminario.usuarios = {};
+        for(let i in usuarios){
+            req.session.seminario.usuarios[usuarios[i].CD_USUARIO] = usuarios[i];
+        }
+    }
+    else{
+        usuarios = req.session.seminario.usuarios;
+    }
+    return usuarios;
 }
 
 
