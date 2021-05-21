@@ -75,7 +75,24 @@ router.get('/seminario/usuarios/otorgarPonente/:id', isLoggedInAndAdmin, async (
         await dbConnect.prototype.añadirRoldePonente(req);
         req.session.seminario.usuarios[id].ES_PONENTE = 1;
         req.flash('success', 'El usuario es ahora ponente de este seminario')
+        res.redirect('/seminario/usuarios/ponencia/'+ id);
+});
+
+router.get('/seminario/usuarios/ponencia/:id', isLoggedInAndAdmin, async (req, res) => {
+    const ID  = req.params.id;
+    res.render('seminario/ponencia', {ID});
+});
+
+router.post('/seminario/usuarios/ponencia/:id', isLoggedInAndAdmin, async (req, res) => {
+    const { id }  = req.params;
+    if(id == req.session.usuario.CD_USUARIO){
+        req.flash('message', 'Lamentablemente, no puedes darte el rol a ti mismo.');
         res.redirect('/seminario/usuarios');
+    }
+    await dbConnect.prototype.añadirRoldePonente(req);
+    req.session.seminario.usuarios[id].ES_PONENTE = 1;
+    req.flash('success', 'La ponencia ha acabado')
+    res.redirect('/seminario/asistentes');
 });
 
 router.get('/seminario/preguntas', isLoggedIn, async (req, res) => {

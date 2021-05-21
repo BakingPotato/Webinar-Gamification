@@ -1,0 +1,64 @@
+<div id="countdown"></div>
+<button id="parar_btn" class="btn btn-success btn-block" onclick="Parar()">Iniciar</button>
+<button class="btn btn-success btn-block"  onclick="Enviar()">Enviar</button>
+
+<script>
+    let end = new Date('01/01/2100 00:05:01' );
+    let now = new Date('01/01/2100 00:00:00');
+
+    let _second = 1000;
+    let _minute = _second * 60;
+    let _hour = _minute * 60;
+    let _day = _hour * 24;
+
+    let timer;
+    let iniciar = false;
+    let distance = 0;
+
+    function showRemaining() {
+        if(iniciar){
+            now.setTime(now.getTime() + _second)
+            let distance = end - now;
+            if (distance < 0) {
+
+                clearInterval(timer);
+                document.getElementById('countdown').innerHTML = 'EXPIRED!';
+
+                return;
+            }
+            var minutes = Math.floor((distance % _hour) / _minute);
+            var seconds = Math.floor((distance % _minute) / _second);
+
+            document.getElementById('countdown').innerHTML ='';
+            document.getElementById('countdown').innerHTML = '0'+minutes+ '::' + seconds;
+        }
+    }
+
+    timer = setInterval(showRemaining, 1000);
+
+    function Parar(){
+        iniciar = !iniciar;
+        if(!iniciar){
+            document.getElementById('parar_btn').innerHTML = "Parar";
+        }else{
+            document.getElementById('parar_btn').innerHTML = "Iniciar";
+        }
+    }
+
+    function Enviar(){
+        if(!iniciar){
+            const form = document.createElement('form');
+            form.method = "POST";
+            form.action = "/seminario/usuarios/ponencia/"+ {{ID}};
+            let puntuacion = Math.floor(((end - now) % _hour) / _minute) + (Math.floor(((end - now) % _minute) / _second) * 0.05)
+            const field = document.createElement('input');
+            field.type = 'hidden';
+            field.name = 'puntuacion';
+            field.value = puntuacion;
+
+            form.appendChild(field);
+            document.body.appendChild(form);
+            form.submit();
+        }  
+    }
+</script>
