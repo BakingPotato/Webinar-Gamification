@@ -20,7 +20,7 @@ require('./lib/passport');
 
 const pool = mssql.connect(config.db); //Crea una conexion a una base de datos
 
-app.set('port', config.port)
+app.set('port', procces.env.PORT || config.port)
 app.set('views', path.join(__dirname, "views"))
 app.engine('.hbs', handlebars({
     defaultLayout: 'main',
