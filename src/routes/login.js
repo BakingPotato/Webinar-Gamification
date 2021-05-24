@@ -27,6 +27,10 @@ router.post('/inicio', (req, res, next) => {
 });
 
 router.get('/salir', isLoggedIn, (req, res) => {
+    req.session.seminario = null;
+    req.session.seminarios = null;
+    req.session.usuario = null;
+    req.session.usuarios = null;
     req.logOut();
     res.redirect('inicio');
 })

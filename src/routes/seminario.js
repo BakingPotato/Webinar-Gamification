@@ -74,23 +74,23 @@ router.get('/seminario/usuarios/otorgarPonente/:id', isLoggedInAndAdmin, async (
         }
         await dbConnect.prototype.añadirRoldePonente(req);
         req.session.seminario.usuarios[id].ES_PONENTE = 1;
-        req.flash('success', 'El usuario es ahora ponente de este seminario')
+        req.flash('success', req.session.seminario.usuarios[id].DS_NOMBRE + ' esta ahora presentando')
         res.redirect('/seminario/usuarios/ponencia/'+ id);
 });
 
 router.get('/seminario/usuarios/ponencia/:id', isLoggedInAndAdmin, async (req, res) => {
     const ID  = req.params.id;
-    res.render('seminario/ponencia', {ID});
+    let ocultar = true;
+    res.render('seminario/ponencia', {ID, ocultar});
 });
 
 router.post('/seminario/usuarios/ponencia/:id', isLoggedInAndAdmin, async (req, res) => {
     const { id }  = req.params;
-
-    req.session.seminario.ponentes[id].NM_PUNTOS += req.body.puntuacion;
+    if(req.body.puntuacion < 0) req.body.puntuacion = 0;
     await dbConnect.prototype.votarPonente(req);
-  
+    req.session.seminario.ponentes = null;
     req.flash('success', 'La ponencia ha acabado')
-    res.redirect('/seminario/asistentes');
+    res.redirect('/seminario/usuarios');
 });
 
 router.get('/seminario/preguntas', isLoggedIn, async (req, res) => {
@@ -111,6 +111,7 @@ router.get('/seminario/preguntas/votar/:id', isLoggedIn, async (req, res) => {
     }else{
         req.session.seminario.preguntas[id].VOTADO = true;
         req.session.seminario.preguntas[id].NM_VOTOS += 5;
+        req.body.puntuacion = 5;
         await dbConnect.prototype.votarPregunta(req);
         req.flash("success", "Su voto fue emitido con éxito");
         res.redirect('/seminario/preguntas');    

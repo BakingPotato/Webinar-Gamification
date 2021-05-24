@@ -9,47 +9,60 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
-        {{#if seminario}}
-            <li class="nav-item">
-              <a class="nav-link" href="/seminario/preguntas">Preguntas</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/seminario/usuarios">Asistentes</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/seminario/ponentes">Ponentes</a>
-            </li>
-        {{/if}}
-        {{#if user}}
-          {{#if user.ES_ADMIN}}
-            <li class="nav-item">
-              <a class="nav-link" href="/PerfilA/usuarios">Usuarios</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/PerfilA/seminarios">Seminarios</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/PerfilA">Perfil</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/salir">Cerrar sesión</a>
-            </li>
+        {{#unless ocultar}}
+          {{#if seminario}}
+           <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Links
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/seminario/preguntas">Preguntas</a>
+                <a class="dropdown-item" href="/seminario/usuarios">Asistentes</a>
+                <a class="dropdown-item" href="/seminario/ponentes">Ponentes</a>
+            </div>
+          </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/seminario/preguntas">Preguntas</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/seminario/usuarios">Asistentes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/seminario/ponentes">Ponentes</a>
+              </li>
+          {{/if}}
+          {{#if user}}
+            {{#if user.ES_ADMIN}}
+              <li class="nav-item">
+                <a class="nav-link" href="/PerfilA/usuarios">Usuarios</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/PerfilA/seminarios">Seminarios</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/PerfilA">Perfil</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/salir">Cerrar sesión</a>
+              </li>
+            {{else}}
+              <li class="nav-item">
+                <a class="nav-link" href="/perfil">Perfil</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/salir">Cerrar sesión</a>
+              </li>
+            {{/if}}
           {{else}}
             <li class="nav-item">
-              <a class="nav-link" href="/perfil">Perfil</a>
+              <a id="nav-inicio" class="nav-link" href="/inicio">Iniciar Sesión</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/salir">Cerrar sesión</a>
+              <a id="nav-registro" class="nav-link" href="/registro">Registrarse</a>
             </li>
           {{/if}}
-        {{else}}
-          <li class="nav-item">
-            <a id="nav-inicio" class="nav-link" href="/inicio">Iniciar Sesión</a>
-          </li>
-          <li class="nav-item">
-            <a id="nav-registro" class="nav-link" href="/registro">Registrarse</a>
-          </li>
-        {{/if}}
+        {{/unless}}
       </ul>
     </div>
   </div>

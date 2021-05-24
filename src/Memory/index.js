@@ -92,7 +92,7 @@ class databaseConnect extends IDriver {
         .input("CD_ORIGEN", pool.Int, req.session.usuario.CD_USUARIO)
         .input("CD_SEMINARIO", pool.Int,  req.session.seminario.CD_SEMINARIO)
         .input("CD_DESTINO", pool.Int, req.params.id)
-        .input("NM_PUNTOS", pool.Int, 5)
+        .input("NM_PUNTOS", pool.Int, req.body.puntuacion)
         .execute('SUMAR_VOTOS_A_USUARIO')
         return result.returnValue;
     }
