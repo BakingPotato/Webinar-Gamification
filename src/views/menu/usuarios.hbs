@@ -2,9 +2,9 @@
     <div class="row">
     USUARIOS
         <table class="default">
-            <tr><th>Nombre</th><th>Nombre twitter</th><th>Descripción</th><th>Puntuación</th><th>Rol</th><th>Permisos</th></tr>
+            <tr><th>Nombre</th><th>Nombre twitter</th><th>Descripción</th><th>Puntos Ponencia</th><th>Puntos Preguntas</th><th>Rol</th><th>Permisos</th></tr>
         {{#each usuarios}}
-            <tr><td>{{DS_NOMBRE}}</td><td>{{DS_TWITTER}}</td><td>{{DS_DESCRIPCION}}</td><td>{{NM_PUNTOS}}</td>
+            <tr><td>{{DS_NOMBRE}}</td><td>{{DS_TWITTER}}</td><td>{{DS_DESCRIPCION}}</td><td>{{NM_PUNTOS}}</td><td>{{NM_PUNTOS_CUESTION}}</td>
             {{#if ES_ADMIN }}
                 <td>Administrador</td>
                 <td><a class="btn btn-secondary" href="usuarios/quitarRol/{{CD_USUARIO}}">

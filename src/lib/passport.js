@@ -34,12 +34,11 @@ passport.use('local.registro', new LocalStrategy({
     passwordField: 'pass',
     passReqToCallback: true
 }, async (req, username, password, done)=> {
-    const { name, descripcion } = req.body;
+    const { name } = req.body;
 
     const newUser = {
         "DS_CORREO" : username,
         "DS_NOMBRE": name,
-        "DS_DESCRIPCION": descripcion,
         "DS_PASS" : password,
         "NM_PUNTOS": 0,
         "ES_ADMIN": 0,
@@ -53,7 +52,6 @@ passport.use('local.registro', new LocalStrategy({
     const result = await request
         .input("DS_CORREO", pool.VarChar(50), newUser.DS_CORREO)
         .input("DS_NOMBRE", pool.VarChar(50), newUser.DS_NOMBRE)
-        .input("DS_DESCRIPCION", pool.VarChar(250), newUser.DS_DESCRIPCION)
         .input("DS_PASS", pool.VarChar(50), newUser.DS_PASS)
         .input("ES_ADMIN", pool.Bit, 0)
         .execute('REGISTRAR_USUARIO')

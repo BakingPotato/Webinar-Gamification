@@ -74,14 +74,14 @@ router.get('/seminario/usuarios/otorgarPonente/:id', isLoggedInAndAdmin, async (
         }
         await dbConnect.prototype.añadirRoldePonente(req);
         req.session.seminario.usuarios[id].ES_PONENTE = 1;
-        req.flash('success', req.session.seminario.usuarios[id].DS_NOMBRE + ' esta ahora presentando')
         res.redirect('/seminario/usuarios/ponencia/'+ id);
 });
 
 router.get('/seminario/usuarios/ponencia/:id', isLoggedInAndAdmin, async (req, res) => {
     const ID  = req.params.id;
+    const usuario = req.session.seminario.usuarios[ID];
     let ocultar = true;
-    res.render('seminario/ponencia', {ID, ocultar});
+    res.render('seminario/ponencia', {ID, usuario, ocultar});
 });
 
 router.post('/seminario/usuarios/ponencia/:id', isLoggedInAndAdmin, async (req, res) => {

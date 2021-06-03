@@ -31,7 +31,7 @@ class databaseConnect extends IDriver {
         const request = new pool.Request();
         const result = await request
         .input("CD_SEMINARIO", pool.Int, req.session.seminario.CD_SEMINARIO)
-        .execute('OBTENER_RANKING_USUARIOS')
+        .execute('OBTENER_RANKING_USUARIOS_POR_PUNTOS_PREGUNTA')
         return result.recordset;
     }
 
