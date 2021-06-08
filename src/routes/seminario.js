@@ -27,8 +27,10 @@ router.get('/seminario/ponentes/votar/:id', isLoggedIn, async (req, res) => {
         req.flash("message", "No puedes votarte a ti mismo");
         res.redirect('/seminario/ponentes');
     }else{
-        req.session.seminario.ponentes[id].VOTADO = true;
-        req.session.seminario.ponentes[id].NM_PUNTOS += 5;
+        // req.session.seminario.ponentes[id].VOTADO = true;
+        // req.session.seminario.ponentes[id].NM_PUNTOS += 10;
+        req.session.seminario.ponentes = null;
+        req.body.puntuacion = 10;
         await dbConnect.prototype.votarPonente(req);
         req.flash("success", "Su voto fue emito con éxito");
         res.redirect('/seminario/ponentes');    
@@ -43,8 +45,10 @@ router.get('/seminario/ponentes/actualizar', isLoggedIn, async (req, res) => {
 
 router.get('/seminario/ponentes/preguntar/:id', isLoggedIn, async (req, res) => {
     req.session.seminario.CD_DIRIGIDO = req.params.id;
+    let preguntas = await dbConnect.prototype.getPreguntasEspecificas(req);
+    let usuario = req.session.seminario.ponentes[req.params.id];
     let seminario = true;
-    res.render('seminario/preguntaNueva', {seminario})
+    res.render('seminario/preguntaNueva', {seminario, usuario, preguntas })
 });
 
 router.post('/seminario/ponentes/preguntar', isLoggedIn, async (req, res) => {
@@ -72,22 +76,23 @@ router.get('/seminario/usuarios/otorgarPonente/:id', isLoggedInAndAdmin, async (
             req.flash('message', 'Lamentablemente, no puedes darte el rol a ti mismo.');
             res.redirect('/seminario/usuarios');
         }
-        await dbConnect.prototype.añadirRoldePonente(req);
-        req.session.seminario.usuarios[id].ES_PONENTE = 1;
         res.redirect('/seminario/usuarios/ponencia/'+ id);
 });
 
 router.get('/seminario/usuarios/ponencia/:id', isLoggedInAndAdmin, async (req, res) => {
     const ID  = req.params.id;
     const usuario = req.session.seminario.usuarios[ID];
-    let ocultar = true;
-    res.render('seminario/ponencia', {ID, usuario, ocultar});
+    const tiempo = req.session.seminario.TIEMPO_PONENCIA;
+    const ocultar = true;
+    res.render('seminario/ponencia', {ID, usuario, tiempo, ocultar});
 });
 
 router.post('/seminario/usuarios/ponencia/:id', isLoggedInAndAdmin, async (req, res) => {
     const { id }  = req.params;
     if(req.body.puntuacion < 0) req.body.puntuacion = 0;
     await dbConnect.prototype.votarPonente(req);
+    await dbConnect.prototype.añadirRoldePonente(req);
+    req.session.seminario.usuarios[id].ES_PONENTE = 1;
     req.session.seminario.ponentes = null;
     req.flash('success', 'La ponencia ha acabado')
     res.redirect('/seminario/usuarios');
@@ -109,8 +114,9 @@ router.get('/seminario/preguntas/votar/:id', isLoggedIn, async (req, res) => {
         req.flash("message", "No puedes votarte a ti mismo");
         res.redirect('/seminario/preguntas');
     }else{
-        req.session.seminario.preguntas[id].VOTADO = true;
-        req.session.seminario.preguntas[id].NM_VOTOS += 5;
+        // req.session.seminario.preguntas[id].VOTADO = true;
+        // req.session.seminario.preguntas[id].NM_VOTOS += 5;
+        req.session.seminario.preguntas = null;
         req.body.puntuacion = 5;
         await dbConnect.prototype.votarPregunta(req);
         req.flash("success", "Su voto fue emitido con éxito");

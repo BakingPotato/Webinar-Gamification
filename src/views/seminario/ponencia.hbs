@@ -18,13 +18,13 @@
 </div>
 
 <script>
-    let end = new Date('01/01/2100 00:00:05' );
-    let now = new Date('01/01/2100 00:00:00');
-
     let _second = 1000;
     let _minute = _second * 60;
     let _hour = _minute * 60;
     let _day = _hour * 24;
+
+    let now = new Date('01/01/2100 00:00:00' );
+    let end = now.getTime() + (_second * 60 * {{tiempo}});
 
     let timer;
     let iniciar = false;

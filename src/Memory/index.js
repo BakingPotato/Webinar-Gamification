@@ -108,6 +108,7 @@ class databaseConnect extends IDriver {
         .input("DS_PASS", pool.Int, req.body.DS_PASS)
         .input("FECHA", pool.Date,  req.body.FECHA)
         .input("DS_DESCRIPCION", pool.VarChar(250),  req.body.DS_DESCRIPCION)
+        .input("TIEMPO_PONENCIA", pool.Int,  req.body.TIEMPO_PONENCIA)
         .input("DS_HASHTAG", pool.VarChar(150), null)
         .execute('REGISTRAR_SEMINARIO')
         return result.returnValue;
@@ -135,6 +136,15 @@ class databaseConnect extends IDriver {
         .input("CD_SEMINARIO", pool.Int, req.session.seminario.CD_SEMINARIO)
         .input("CD_USUARIO", pool.Int, req.session.usuario.CD_USUARIO)
         .execute('OBTENER_RANKING_PREGUNTAS')
+        return result.recordset;
+    }
+
+    async getPreguntasEspecificas(req){
+        const request = new pool.Request();
+        const result = await request
+        .input("CD_SEMINARIO", pool.Int, req.session.seminario.CD_SEMINARIO)
+        .input("CD_USUARIO", pool.Int, req.session.seminario.CD_DIRIGIDO)
+        .execute('OBTENER_RANKING_PREGUNTAS_ESPECIFICAS')
         return result.recordset;
     }
 
