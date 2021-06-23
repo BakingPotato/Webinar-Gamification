@@ -12,7 +12,7 @@
         <div class="col-md-4 mx-auto">
             <div id="countdown"></div>
             <button id="parar_btn" class="btn btn-success btn-block" onclick="Parar()">Iniciar</button>
-            <button class="btn btn-success btn-block"  onclick="Enviar()">Enviar</button>
+            <button id="enviar_btn" class="btn btn-success btn-block"  onclick="Enviar()">Enviar</button>
         </div>
     </div>
 </div>
@@ -24,28 +24,34 @@
     let _day = _hour * 24;
 
     let now = new Date('01/01/2100 00:00:00' );
-    let end = now.getTime() + (_second * 60 * {{tiempo}});
+    let end = now.getTime() + (_second * 60 );//* {{tiempo}});
 
     let timer;
     let iniciar = false;
     let distance = 0;
+    let puntuacion = 0
 
     function showRemaining() {
         if(iniciar){
             now.setTime(now.getTime() + _second)
             let distance = end - now;
             if (distance < 0) {
-                clearInterval(timer);
-                return;
+                if(puntuacion > 0){
+                    puntuacion -= 0.01;
+                }else{
+                    clearInterval(timer);
+                }
+                //return;
+            }else{
+                var minutes = Math.floor((distance % _hour) / _minute);
+                var seconds = Math.floor((distance % _minute) / _second);
+                puntuacion += 0.01;
+                document.getElementById('countdown').innerHTML ='';
+                if(seconds < 10)
+                    document.getElementById('countdown').innerHTML = '0' + minutes + '::0' + seconds;
+                else
+                    document.getElementById('countdown').innerHTML = '0' + minutes + '::' + seconds;
             }
-            var minutes = Math.floor((distance % _hour) / _minute);
-            var seconds = Math.floor((distance % _minute) / _second);
-
-            document.getElementById('countdown').innerHTML ='';
-            if(seconds < 10)
-                document.getElementById('countdown').innerHTML = '0' + minutes + '::0' + seconds;
-            else
-                document.getElementById('countdown').innerHTML = '0' + minutes + '::' + seconds;
         }
     }
 
@@ -55,8 +61,10 @@
         iniciar = !iniciar;
         if(!iniciar){
             document.getElementById('parar_btn').innerHTML = "Iniciar";
+            document.getElementById('enviar_btn').className = "btn btn-success btn-block";
         }else{
             document.getElementById('parar_btn').innerHTML = "Parar";
+            document.getElementById('enviar_btn').className = "btn btn-danger btn-block";
         }
     }
 
@@ -65,11 +73,10 @@
             const form = document.createElement('form');
             form.method = "POST";
             form.action = "/seminario/usuarios/ponencia/"+ {{ID}};
-            let puntuacion = Math.floor(((end - now) % _hour) / _minute) + (Math.floor(((end - now) % _minute) / _second) * 0.05)
             const field = document.createElement('input');
             field.type = 'hidden';
             field.name = 'puntuacion';
-            field.value = puntuacion;
+            field.value = Math.floor(puntuacion * 1.5);
 
             form.appendChild(field);
             document.body.appendChild(form);

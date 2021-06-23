@@ -1,3 +1,4 @@
+
 <div class="container p-4">
     <div class="row">
     Ponentes del seminario
@@ -9,11 +10,11 @@
                     Preguntar
                 </a></td>
             {{#if VOTADO }}
-                <td><a class="btn btn-secondary" disabled="disabled" href="">
+                <td><a class="btn btn-danger btn-block" disabled="disabled" href="">
                     Votado
                 </a></td>
             {{else}}
-                <td><a class="btn btn-secondary" href="ponentes/votar/{{CD_USUARIO}}">
+                <td><a class="btn btn-success btn-block" onclick="abrirPuntuacion({{CD_USUARIO}})">
                     Votar
                 </a></td>
             {{/if}}
@@ -36,3 +37,35 @@
         </a>
     </div>
 </div>
+
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card text-center">
+                <div class="card-body" id="puntuar">
+                <form action="/seminario/ponentes/votar" id="puntuarForm" class="form-container">
+                    <label for="email"><b>¿Cúantos puntos le otorgas a este ponente? (Del 1 al 5)</b></label>
+                    <input type="number"  min="1" max="5" name="NM_PUNTOS" value="3" class="form-control">
+                    <input type="number" id="ponente_votado" name="CD_USUARIO" class="form-control">
+                    <button type="submit" class="btn btn-success btn-block">Votar</button>
+                </form>
+                <button class="btn btn-danger btn-block" onclick="cerrarPuntuacion()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("puntuar").style.display = "none";
+    document.getElementById("ponente_votado").style.display = "none";
+
+    function abrirPuntuacion(id) {
+        document.getElementById("ponente_votado").value = id;
+        document.getElementById("puntuar").style.display = "block";
+    }
+  
+    function cerrarPuntuacion() {
+        document.getElementById("puntuar").style.display = "none";
+    }
+</script>

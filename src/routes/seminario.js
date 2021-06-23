@@ -18,8 +18,8 @@ router.get('/seminario/ponentes', isLoggedIn, async (req, res) => {
     res.render('seminario/ponentes', {ponentes, seminario});
 });
 
-router.get('/seminario/ponentes/votar/:id', isLoggedIn, async (req, res) => {
-    const { id }  = req.params;
+router.get('/seminario/ponentes/votar', isLoggedIn, async (req, res) => {
+    const id  = req.query.CD_USUARIO;
     if(req.session.seminario.ponentes[id].VOTADO ){
         req.flash("message", "Eres listo, pero no lo suficiente");
         res.redirect('/seminario/ponentes');
@@ -30,12 +30,33 @@ router.get('/seminario/ponentes/votar/:id', isLoggedIn, async (req, res) => {
         // req.session.seminario.ponentes[id].VOTADO = true;
         // req.session.seminario.ponentes[id].NM_PUNTOS += 10;
         req.session.seminario.ponentes = null;
-        req.body.puntuacion = 10;
+        req.body.puntuacion = req.query.NM_PUNTOS;
+        req.body.id = id;
         await dbConnect.prototype.votarPonente(req);
         req.flash("success", "Su voto fue emito con éxito");
         res.redirect('/seminario/ponentes');    
     }
 });
+
+// router.get('/seminario/ponentes/votar', isLoggedIn, async (req, res) => {
+//     const id  = req.query.CD_USUARIO;
+//     if(req.session.seminario.ponentes[id].VOTADO ){
+//         req.flash("message", "Eres listo, pero no lo suficiente");
+//         res.redirect('/seminario/ponentes');
+//     }else if(req.session.usuario.CD_USUARIO == id ){
+//         req.flash("message", "No puedes votarte a ti mismo");
+//         res.redirect('/seminario/ponentes');
+//     }else{
+//         // req.session.seminario.ponentes[id].VOTADO = true;
+//         // req.session.seminario.ponentes[id].NM_PUNTOS += 10;
+//         req.session.seminario.ponentes = null;
+//         req.body.puntuacion = req.query.NM_PUNTOS;
+//         req.body.id = id;
+//         await dbConnect.prototype.votarPonente(req);
+//         req.flash("success", "Su voto fue emito con éxito");
+//         res.redirect('/seminario/ponentes');    
+//     }
+// });
 
 
 router.get('/seminario/ponentes/actualizar', isLoggedIn, async (req, res) => {
@@ -57,6 +78,7 @@ router.post('/seminario/ponentes/preguntar', isLoggedIn, async (req, res) => {
     req.flash("success", "Su pregunta ha sido realizada");
     res.redirect('/seminario/ponentes')
 });
+
 
 router.get('/seminario/usuarios', isLoggedIn, async (req, res) => {
     let usuarios = await getUsuarios(req);
@@ -89,7 +111,6 @@ router.get('/seminario/usuarios/ponencia/:id', isLoggedInAndAdmin, async (req, r
 
 router.post('/seminario/usuarios/ponencia/:id', isLoggedInAndAdmin, async (req, res) => {
     const { id }  = req.params;
-    if(req.body.puntuacion < 0) req.body.puntuacion = 0;
     await dbConnect.prototype.votarPonente(req);
     await dbConnect.prototype.añadirRoldePonente(req);
     req.session.seminario.usuarios[id].ES_PONENTE = 1;
@@ -104,7 +125,6 @@ router.get('/seminario/preguntas', isLoggedIn, async (req, res) => {
     res.render('seminario/preguntas', {preguntas, seminario});
 });
 
-
 router.get('/seminario/preguntas/votar/:id', isLoggedIn, async (req, res) => {
     const { id }  = req.params;
     if(req.session.seminario.preguntas[id].VOTADO ){
@@ -117,11 +137,21 @@ router.get('/seminario/preguntas/votar/:id', isLoggedIn, async (req, res) => {
         // req.session.seminario.preguntas[id].VOTADO = true;
         // req.session.seminario.preguntas[id].NM_VOTOS += 5;
         req.session.seminario.preguntas = null;
-        req.body.puntuacion = 5;
+        req.body.puntuacion = 3;
         await dbConnect.prototype.votarPregunta(req);
         req.flash("success", "Su voto fue emitido con éxito");
         res.redirect('/seminario/preguntas');    
     }
+});
+
+router.get('/seminario/preguntas/desvotar', isLoggedIn, async (req, res) => {
+        const id  = req.query.CD_CUESTION;
+        req.session.seminario.preguntas = null;
+        req.body.puntuacion = 3;
+        await dbConnect.prototype.desvotarPregunta(req);
+        req.session.seminario.preguntas = null;
+        req.flash("success", "Su voto fue retirado con éxito");
+        res.redirect('/seminario/preguntas');    
 });
 
 router.get('/seminario/preguntas/actualizar', isLoggedIn, async (req, res) => {

@@ -91,7 +91,7 @@ class databaseConnect extends IDriver {
         const result = await request
         .input("CD_ORIGEN", pool.Int, req.session.usuario.CD_USUARIO)
         .input("CD_SEMINARIO", pool.Int,  req.session.seminario.CD_SEMINARIO)
-        .input("CD_DESTINO", pool.Int, req.params.id)
+        .input("CD_DESTINO", pool.Int, req.body.id)
         .input("NM_PUNTOS", pool.Int, req.body.puntuacion)
         .execute('SUMAR_VOTOS_A_USUARIO')
         return result.returnValue;
@@ -165,12 +165,22 @@ class databaseConnect extends IDriver {
         .input("CD_CUESTION", pool.Int, req.params.id)
         .input("CD_ORIGEN", pool.Int, req.session.usuario.CD_USUARIO)
         .input("CD_SEMINARIO", pool.Int,  req.session.seminario.CD_SEMINARIO)
-        .input("NM_VOTOS", pool.Int, 5)
+        .input("NM_VOTOS", pool.Int, req.body.puntuacion)
         .execute('SUMAR_VOTOS_A_PREGUNTA')
         return result.returnValue;
     }
 
-    
+    async desvotarPregunta(req){
+        const request = new pool.Request();
+        const result = await request
+        .input("CD_CUESTION", pool.Int, req.query.CD_CUESTION)
+        .input("CD_ORIGEN", pool.Int, req.session.usuario.CD_USUARIO)
+        .input("CD_SEMINARIO", pool.Int,  req.session.seminario.CD_SEMINARIO)
+        .input("NM_VOTOS", pool.Int, req.body.puntuacion)
+        .execute('ELIMINAR_VOTOS_A_PREGUNTA')
+        return result.returnValue;
+    }
+
 }
 
 module.exports = databaseConnect; 
