@@ -4,6 +4,11 @@ const router = express.Router();
 const passport = require('passport');
 const { isLoggedIn } = require('../lib/auth');
 
+router.get('/registro/:id', (req, res)=> {
+    const {id} = req.params;
+    res.render('login/singup', {id})
+});
+
 router.get('/registro', (req, res)=> {
     res.render('login/singup')
 });
@@ -13,6 +18,17 @@ router.post('/registro', passport.authenticate('local.registro', {
         failureRedirect: '/registro',
         failureFlash: true
     }));
+
+router.get('/inicio', (req, res) => {
+    res.render('login/singin')
+});
+
+router.post('/registro/:id',  passport.authenticate('local.registro_alter', {
+            successRedirect: '/perfil',
+            failureRedirect: '/registro',
+            failureFlash: true
+        }
+    ));
 
 router.get('/inicio', (req, res) => {
     res.render('login/singin')

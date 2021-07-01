@@ -6,7 +6,11 @@
                     <h3>Registro</h3>
                 </div>
                 <div class="card-body">
+                {{#if id }}
+                    <form action="/registro/{{id}}" method="POST">
+                {{else}}
                     <form action="/registro" method="POST">
+                {{/if}}
                     <div class="form-group">
                         <input type="text" maxlength="50" name="username" placeholder="Su e-mail" class="form-control" autofocus>
                     </div>
@@ -24,5 +28,9 @@
             </div>
         </div>
     </div>
+    {{#if id }}
+    <a href="/seminario/registro/{{id}}">Si ya tiene una cuenta, inicie sesión en el seminario aquí</a>
+    {{else}}
     <a href="/inicio">Si ya tiene una cuenta, inicie sesión aquí</a>
+    {{/if}}
 </div>

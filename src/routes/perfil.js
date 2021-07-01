@@ -1,4 +1,5 @@
 const express = require('express');
+const nodemailer = require('nodemailer');
 const router = express.Router();
 const dbConnect = require('../Memory')
 const { isLoggedIn, isLoggedInAndAdmin } = require('../lib/auth');
@@ -14,25 +15,31 @@ router.get('/perfil', isLoggedIn, async (req, res) => {
     }
 });
 
+router.get('/perfil/seminario/:id', isLoggedIn, async (req, res) => {
+    const { id }  = req.params;
+    await dbConnect.prototype.registrarseEnSeminario(req, id);
+    req.session.seminario = null;
+    req.session.seminario = req.session.seminarios[id];
+    req.session.usuario.EN_SEMINARIO = true;
+    res.redirect('/seminario/ponentes');
+});
+
+router.get('/seminario/registro/:id', (req, res) => {
+    const { id }  = req.params;
+    res.render('menu/registro', {id});
+});
+
+router.post('/seminario/registro/:id', async (req, res) => {
+    const { username, pass, id }  = req.params;
+    await dbConnect.prototype.registrarseEnSeminario(username, pass, id);
+    req.flash('message', 'Usted ha sido registrado en el seminario correctamente');
+    res.redirect('/inicio');
+});
+
 router.get('/perfil/registro/:id', isLoggedIn, (req, res) => {
-    const seminarios = req.session.seminarios[req.params.id];
-    let seminario = req.session.usuario.EN_SEMINARIO;
     res.render('menu/registro', {seminarios, seminario});
 });
 
-router.post('/perfil/registro/:id', isLoggedIn, async (req, res) => {
-    const { id }  = req.params;
-    if(req.body.pass == req.session.seminarios[id].DS_PASS){
-        await dbConnect.prototype.registrarseEnSeminario(req, id);
-        req.session.seminario = null;
-        req.session.seminario = req.session.seminarios[id];
-        req.session.usuario.EN_SEMINARIO = true;
-        res.redirect('/seminario/ponentes');
-    }else{
-        req.flash('message', 'Clave incorrecta, pruebe de nuevo');
-        res.redirect('/perfil/registro/' + id);
-    }
-});
 router.post('/perfil/actualizarPerfil', isLoggedIn, async (req, res) => {
     await dbConnect.prototype.actualizarUsuario(req);
     req.flash('success', 'Su usuario se actualizo correctamente');
@@ -116,10 +123,41 @@ router.get('/PerfilA/usuarios/otorgarRol/:id', isLoggedInAndAdmin, async (req, r
 });
 
 
+router.post('/PerfilA/seminario/invitar', isLoggedInAndAdmin, async (req, res) => {
+    const { DS_CORREO, CD_SEMINARIO }  = req.body;
+    const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'ludonariotfg@gmail.com',
+        pass: 'TFGFinal20-21'
+    }
+    });
+
+    var mensaje = "Hola, este es un correo para inscribirle en el futuro seminario de la URJC. Cree una cuenta aquí o incie sesión si ya tiene una y se le registrara en el seminario"
+    var mailOptions = {
+        from: 'ludonariotfg@gmail.com',
+        to: DS_CORREO,
+        subject: mensaje,
+        html: '<p>Hola, este es un correo para inscribirle en el futuro seminario de la URJC. Cree una cuenta <a href="http://localhost:9001/seminario/registro/' + CD_SEMINARIO + '">aquí</a> o incie sesión si ya tiene una y se le registrara en el seminario</p>'
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email enviado: ' + info.response);
+        }
+    });
+  
+    req.flash('success', 'El mansaje se envio al email seleccionado')
+    res.redirect('/PerfilA');
+});
+
+
 async function getSeminarios(req){
     let seminarios = {};
     if(!req.session.seminarios){
-        seminarios = await dbConnect.prototype.getSeminariosActivos();
+        seminarios = await dbConnect.prototype.getSeminariosActivos(req);
         req.session.seminarios = {};
         for(let i in seminarios){
             req.session.seminarios[seminarios[i].CD_SEMINARIO] = seminarios[i];

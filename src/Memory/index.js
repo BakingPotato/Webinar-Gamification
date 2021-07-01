@@ -5,9 +5,11 @@ class databaseConnect extends IDriver {
 
     //BLOQUE Usuarios
 
-    async getSeminariosActivos(){
+    async getSeminariosActivos(req){
         const request = new pool.Request();
-        const result = await request.execute('OBTENER_SEMINARIOS_ACTIVOS')
+        const result = await request
+        .input("CD_USUARIO", pool.Int, req.session.usuario.CD_USUARIO)
+        .execute('OBTENER_SEMINARIOS_ACTIVOS')
         return result.recordset;
     }
 
@@ -35,11 +37,12 @@ class databaseConnect extends IDriver {
         return result.recordset;
     }
 
-    async registrarseEnSeminario(req, id_sem){
+    async registrarseEnSeminario(username, pass, id){
         const request = new pool.Request();
         const result = await request
-        .input("CD_USUARIO", pool.Int, req.session.usuario.CD_USUARIO)
-        .input("CD_SEMINARIO", pool.Int, req.session.seminarios[id_sem].CD_SEMINARIO)
+        .input("DS_CORREO", pool.VarChar(50), username)
+        .input("DS_PASS", pool.VarChar(50), pass)            
+        .input("CD_SEMINARIO", pool.Int, id)
         .execute('REGISTRAR_USUARIO_EN_SEMINARIO')
         return result.returnValue;
     }

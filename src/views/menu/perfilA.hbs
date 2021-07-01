@@ -90,6 +90,9 @@
                     <a class="btn btn-secondary" href="PerfilA/seminario/administrador/{{CD_SEMINARIO}}">
                         Menu
                     </a>
+                    <a id="pop_register_user" class="btn btn-secondary" onclick="abrirInvitacion({{CD_SEMINARIO}})">
+                        Invitar
+                    </a>
                 </div>
             </div>
         </div>
@@ -103,4 +106,34 @@
     </div>
 </div>
 
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card text-center">
+                <div class="card-body" id="invitar">
+                <form action="/PerfilA/seminario/invitar" method="POST" id="puntuarForm" class="form-container">
+                    <label for="email"><b>Email del usuario a invitar</b></label>
+                    <input type="text" maxlength="50" name="DS_CORREO" placeholder="correo@gmail.com" class="form-control">
+                    <input type="number" id="seminario_invitado" name="CD_SEMINARIO" class="form-control">
+                    <button type="submit" class="btn btn-success btn-block">Invitar</button>
+                </form>
+                <button class="btn btn-danger btn-block" onclick="cerrarInvitacion()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("invitar").style.display = "none";
+    document.getElementById("seminario_invitado").style.display = "none";
+
+    function abrirInvitacion(id) {
+        document.getElementById("seminario_invitado").value = id;
+        document.getElementById("invitar").style.display = "block";
+    }
   
+    function cerrarInvitacion() {
+        document.getElementById("invitar").style.display = "none";
+    }
+</script>
