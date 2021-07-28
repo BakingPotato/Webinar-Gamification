@@ -28,6 +28,14 @@ class databaseConnect extends IDriver {
         return result.recordset;
     }
 
+    async getListaEspera(req){
+        const request = new pool.Request();
+        const result = await request
+        .input("CD_SEMINARIO", pool.Int, req.session.seminario.CD_SEMINARIO)
+        .execute('OBTENER_LISTA_ESPERA')
+        return result.recordset;
+    }
+
 
     async getUsuariosSeminario(req){
         const request = new pool.Request();
@@ -61,6 +69,17 @@ class databaseConnect extends IDriver {
         return result.returnValue;
     }
 
+    async registrarUsuario(req){
+        const request = new pool.Request();
+        const result = await request
+            .input("DS_CORREO", pool.VarChar(50), req.body.DS_CORREO)
+            .input("DS_NOMBRE", pool.VarChar(50),  req.body.DS_NOMBRE)
+            .input("DS_PASS", pool.VarChar(50),  req.body.DS_PASS)
+            .input("ES_ADMIN", pool.Bit, 0)
+            .execute('REGISTRAR_USUARIO')
+        return result.returnValue;
+    }
+
     async quitarRoldeAdmin(id){
         const request = new pool.Request();
         const result = await request
@@ -88,6 +107,15 @@ class databaseConnect extends IDriver {
         return result.returnValue;
     }
 
+    
+    async registrarEnListaPonentes(req){
+        const request = new pool.Request();
+        const result = await request
+            .input("CD_USUARIO", pool.Int, req.session.seminario.CD_USUARIO)
+            .input("CD_SEMINARIO", pool.Int, req.session.seminario.CD_SEMINARIO)
+            .execute('REGISTRAR_USUARIO_LISTA_ESPERA')
+        return result.returnValue;
+    }
 
     async votarPonente(req){
         const request = new pool.Request();
@@ -108,7 +136,6 @@ class databaseConnect extends IDriver {
         const result = await request
         .input("CD_USUARIO", pool.Int, req.session.usuario.CD_USUARIO)
         .input("DS_NOMBRE", pool.VarChar(50), req.body.DS_NOMBRE)
-        .input("DS_PASS", pool.Int, req.body.DS_PASS)
         .input("FECHA", pool.Date,  req.body.FECHA)
         .input("DS_DESCRIPCION", pool.VarChar(250),  req.body.DS_DESCRIPCION)
         .input("TIEMPO_PONENCIA", pool.Int,  req.body.TIEMPO_PONENCIA)

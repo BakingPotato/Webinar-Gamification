@@ -27,8 +27,6 @@ router.get('/seminario/ponentes/votar', isLoggedIn, async (req, res) => {
         req.flash("message", "No puedes votarte a ti mismo");
         res.redirect('/seminario/ponentes');
     }else{
-        // req.session.seminario.ponentes[id].VOTADO = true;
-        // req.session.seminario.ponentes[id].NM_PUNTOS += 10;
         req.session.seminario.ponentes = null;
         req.body.puntuacion = req.query.NM_PUNTOS;
         req.body.id = id;
@@ -83,8 +81,14 @@ router.post('/seminario/ponentes/preguntar', isLoggedIn, async (req, res) => {
 router.get('/seminario/usuarios', isLoggedIn, async (req, res) => {
     let usuarios = await getUsuarios(req);
     let soyAdmin = req.session.usuario.ES_ADMIN;
+    let soyPonente = req.session.usuario.ES_PONENTE;
     let seminario = true;
-    res.render('seminario/usuario', {usuarios, seminario, soyAdmin});
+    if (req.session.usuario.ES_ADMIN == 1) {
+        let listaEspera = await getListaEspera(req);
+        res.render('seminario/usuario', {usuarios, seminario, soyAdmin, soyPonente, listaEspera});
+    } else{
+        res.render('seminario/usuario', {usuarios, seminario, soyAdmin, soyPonente});
+    }
 });
 
 router.get('/seminario/usuarios/actualizar', isLoggedIn, async (req, res) => {
@@ -99,6 +103,12 @@ router.get('/seminario/usuarios/otorgarPonente/:id', isLoggedInAndAdmin, async (
             res.redirect('/seminario/usuarios');
         }
         res.redirect('/seminario/usuarios/ponencia/'+ id);
+});
+
+router.get('/seminario/usuarios/pedirPonente', isLoggedIn, async (req, res) => {
+    await dbConnect.prototype.registrarEnListaPonentes(req);
+    req.flash('success', 'Enhorabuena, estas registrado en lista, espere a que el admin le de ponente');
+    res.redirect('/seminario/usuarios');
 });
 
 router.get('/seminario/usuarios/ponencia/:id', isLoggedInAndAdmin, async (req, res) => {
@@ -206,6 +216,13 @@ async function getUsuarios(req){
     }
     return usuarios;
 }
+
+async function getListaEspera(req){
+    let espera = {};
+    espera = await dbConnect.prototype.getListaEspera(req);
+    return espera;
+}
+
 
 
 module.exports = router;

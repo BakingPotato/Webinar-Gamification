@@ -24,18 +24,6 @@ router.get('/perfil/seminario/:id', isLoggedIn, async (req, res) => {
     res.redirect('/seminario/ponentes');
 });
 
-router.get('/seminario/registro/:id', (req, res) => {
-    const { id }  = req.params;
-    res.render('menu/registro', {id});
-});
-
-router.post('/seminario/registro/:id', async (req, res) => {
-    const { username, pass, id }  = req.params;
-    await dbConnect.prototype.registrarseEnSeminario(username, pass, id);
-    req.flash('message', 'Usted ha sido registrado en el seminario correctamente');
-    res.redirect('/inicio');
-});
-
 router.get('/perfil/registro/:id', isLoggedIn, (req, res) => {
     res.render('menu/registro', {seminarios, seminario});
 });
@@ -138,7 +126,7 @@ router.post('/PerfilA/seminario/invitar', isLoggedInAndAdmin, async (req, res) =
         from: 'ludonariotfg@gmail.com',
         to: DS_CORREO,
         subject: mensaje,
-        html: '<p>Hola, este es un correo para inscribirle en el futuro seminario de la URJC. Cree una cuenta <a href="http://localhost:9001/seminario/registro/' + CD_SEMINARIO + '">aquí</a> o incie sesión si ya tiene una y se le registrara en el seminario</p>'
+        html: '<p>Hola, este es un correo para inscribirle en el futuro seminario de la URJC. Cree una cuenta <a href="http://localhost:9001/inicio/' + CD_SEMINARIO + '">aquí</a> o incie sesión si ya tiene una y se le registrara en el seminario</p>'
     };
 
     transporter.sendMail(mailOptions, function(error, info){
@@ -151,6 +139,39 @@ router.post('/PerfilA/seminario/invitar', isLoggedInAndAdmin, async (req, res) =
   
     req.flash('success', 'El mansaje se envio al email seleccionado')
     res.redirect('/PerfilA');
+});
+
+router.post('/PerfilA/registrarU', isLoggedInAndAdmin, async (req, res) => {
+    await dbConnect.prototype.registrarUsuario(req);
+    req.flash('success', 'Su usuario se actualizo correctamente');
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'ludonariotfg@gmail.com',
+            pass: 'TFGFinal20-21'
+        }
+        });
+    
+        var mensaje = "Hola, le informamos que ha sido registrado en la plataforma de ludonario. Para iniciar sesión introduzca este correo y la constraseña: " + req.body.DS_PASS
+        var mailOptions = {
+            from: 'ludonariotfg@gmail.com',
+            to: req.body.DS_CORREO,
+            subject: mensaje
+        };
+    
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email enviado: ' + info.response);
+            }
+        });
+      
+    if(req.session.usuario.ES_ADMIN == 0){
+        res.redirect('/perfil');
+    }else{
+        res.redirect('/PerfilA');
+    }
 });
 
 

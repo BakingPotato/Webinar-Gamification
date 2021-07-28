@@ -30,6 +30,32 @@ passport.use('local.inicio', new LocalStrategy({
     }
 }))
 
+passport.use('local.inicio_alter', new LocalStrategy({ 
+    emailField: 'username',
+    passwordField: 'pass',
+    passReqToCallback: true
+}, async (req, username, password, done)=> {
+    const request = new pool.Request();
+    const result = await request
+        .input("DS_CORREO", pool.VarChar(50), username)
+        .execute('OBTENER_USUARIO_POR_LOGIN')
+    
+    if(result.recordset.length > 0) {
+        let user = result.recordset[0];
+        user.ESTA_EN_SEMINARIO = 0;
+        const validPass = password == user.DS_PASS//await helpers.matchPassword(password, user.DS_PASS.plaintext);
+        if(validPass){
+            req.session.usuario = user;
+            await dbConnect.prototype.registrarseEnSeminario(username, password, req.params.id);
+            return done(null, user, req.flash('success', 'Bienvenido ' + user.DS_NOMBRE));
+        }else{
+            done(null, false, req.flash('message', 'Contraseña incorrecta'))
+        }
+    } else {
+        return done(null, false, req.flash('message', 'No se ha encontrado su dirección de correo'))
+    }
+}))
+
 passport.use('local.registro', new LocalStrategy({
     emailField: 'username',
     passwordField: 'pass',
@@ -90,7 +116,7 @@ passport.use('local.registro_alter', new LocalStrategy({
     newUser.CD_USUARIO = result.returnValue
     req.session.usuario = newUser;
     await dbConnect.prototype.registrarseEnSeminario(username, password, req.params.id);
-    return done(null, newUser, req.flash('success', 'Bienvenido ' + newUser.DS_NOMBRE + ', se le registro en el seminario con exito'));
+    return done(null, newUser, req.flash('success', 'Bienvenido ' + newUser.DS_NOMBRE + ', se le registro en el seminario con exito')); 
 }))
 
 passport.serializeUser((user, done)=>{

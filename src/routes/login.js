@@ -19,9 +19,6 @@ router.post('/registro', passport.authenticate('local.registro', {
         failureFlash: true
     }));
 
-router.get('/inicio', (req, res) => {
-    res.render('login/singin')
-});
 
 router.post('/registro/:id',  passport.authenticate('local.registro_alter', {
             successRedirect: '/perfil',
@@ -29,6 +26,11 @@ router.post('/registro/:id',  passport.authenticate('local.registro_alter', {
             failureFlash: true
         }
     ));
+
+router.get('/inicio/:id', (req, res) => {
+    const {id} = req.params;
+    res.render('login/singin', {id})});
+    
 
 router.get('/inicio', (req, res) => {
     res.render('login/singin')
@@ -40,6 +42,14 @@ router.post('/inicio', (req, res, next) => {
             failureRedirect: '/inicio',
             failureFlash: true
         })(req, res, next);
+});
+
+router.post('/inicio/:id', (req, res, next) => {
+    passport.authenticate('local.inicio_alter', {
+        successRedirect: '/perfil',
+        failureRedirect: '/inicio/' + req.params.id,
+        failureFlash: true
+    })(req, res, next);
 });
 
 router.get('/salir', isLoggedIn, (req, res) => {

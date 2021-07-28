@@ -6,8 +6,12 @@
                     <h3>Inicio de sesión</h3>
                 </div>
                 <div class="card-body">
-                    <form action="/inicio" method="POST">
-                    <div class="form-group">
+                    {{#if id }}
+                        <form action="/inicio/{{id}}" method="POST">
+                    {{else}}
+                        <form action="/inicio" method="POST">
+                    {{/if}} 
+                        <div class="form-group">
                         <input type="text" maxlength="50" name="username" placeholder="Su correo" class="form-control" autofocus>
                     </div>
                     <div class="form-group">
@@ -21,5 +25,9 @@
             </div>
         </div>
     </div>
-    <a href="/registro">¿Nuevo usuario? Cree una cuenta nueva aquí</a>
+    {{#if id }}
+    <a href="/registro/{{id}}">¿Nuevo usuario? Registrese aquí, se le inscribira automaticamente en el seminario</a>
+    {{else}}
+    <a href="/registro">¿Nuevo usuario? Registrese aquí</a>
+    {{/if}}
 </div>
