@@ -1,0 +1,39 @@
+{{#if ES_ADMIN }}
+<div class="container p-4">
+    <div class="row">
+    SEMINARIOS
+        <table class="default">
+            <tr><th>Nombre</th><th>Fecha</th><th>Autoria</th></tr>
+        {{#each seminarios}}
+            <tr><td>{{DS_NOMBRE}}</td><td>{{FECHA}}</td>
+          {{#ifEquals CD_CREADOR mi_id}}
+            <td>Personal</td>
+            {{else}}
+            <td>Ajeno</td>
+        {{/ifEquals}}
+            </tr>
+        {{/each}}
+        </table>
+    </div>
+</div>
+
+{{else}}
+<div class="container p-4">
+    <div class="row">
+    SEMINARIOS
+        <table class="default">
+            <tr><th>Nombre</th><th>Fecha</th></tr>
+        {{#each seminarios}}
+            <tr><td>{{DS_NOMBRE}}</td><td>{{FECHA}}</td></tr>
+        {{/each}}
+        </table>
+    </div>
+</div>
+
+{{/if}}
+
+<script>
+    Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+        return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+    });
+</script>

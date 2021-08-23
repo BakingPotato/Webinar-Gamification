@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const passport = require('passport');
-const { isLoggedIn } = require('../lib/auth');
+const { isLoggedIn, isAlreadyLogged} = require('../lib/auth');
 
 router.get('/registro/:id', (req, res)=> {
     const {id} = req.params;
@@ -13,26 +13,26 @@ router.get('/registro', (req, res)=> {
     res.render('login/singup')
 });
 
-router.post('/registro', passport.authenticate('local.registro', {
+router.post('/registro', isAlreadyLogged, passport.authenticate('local.registro', {
         successRedirect: '/perfil',
         failureRedirect: '/registro',
         failureFlash: true
     }));
 
 
-router.post('/registro/:id',  passport.authenticate('local.registro_alter', {
+router.post('/registro/:id', isAlreadyLogged,  passport.authenticate('local.registro_alter', {
             successRedirect: '/perfil',
             failureRedirect: '/registro',
             failureFlash: true
         }
     ));
 
-router.get('/inicio/:id', (req, res) => {
+router.get('/inicio/:id', isAlreadyLogged, (req, res) => {
     const {id} = req.params;
     res.render('login/singin', {id})});
     
 
-router.get('/inicio', (req, res) => {
+router.get('/inicio', isAlreadyLogged, (req, res) => {
     res.render('login/singin')
 });
 

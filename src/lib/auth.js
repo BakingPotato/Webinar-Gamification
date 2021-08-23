@@ -16,5 +16,15 @@ module.exports = {
             }
         }
         return res.redirect('/inicio');
+    },
+
+    isAlreadyLogged (req, res, next) {
+        if (!req.isAuthenticated()) {
+            return next();
+        }else{
+            req.flash('success', 'Cierre sesión primero');
+             return res.redirect('/perfil');
+        }
     }
+
 };

@@ -4,12 +4,26 @@ const IDriver = require('./IDriver');
 class databaseConnect extends IDriver {
 
     //BLOQUE Usuarios
+    async getSeminarios(req){
+        const request = new pool.Request();
+        const result = await request
+        .execute('OBTENER_SEMINARIOS')
+        return result.recordset;
+    }
 
     async getSeminariosActivos(req){
         const request = new pool.Request();
         const result = await request
         .input("CD_USUARIO", pool.Int, req.session.usuario.CD_USUARIO)
         .execute('OBTENER_SEMINARIOS_ACTIVOS')
+        return result.recordset;
+    }
+
+    async getSeminariosParticipado(req){
+        const request = new pool.Request();
+        const result = await request
+        .input("CD_USUARIO", pool.Int, req.session.usuario.CD_USUARIO)
+        .execute('OBTENER_SEMINARIOS_PARTICIPADO')
         return result.recordset;
     }
 

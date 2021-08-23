@@ -15,6 +15,12 @@ router.get('/perfil', isLoggedIn, async (req, res) => {
     }
 });
 
+router.get('/perfil/seminarios', isLoggedIn, async (req, res) => {
+    let seminarios = await dbConnect.prototype.getSeminariosParticipado(req);
+    let soyAdmin = false;
+    res.render('menu/seminarios', {seminarios, soyAdmin});
+});
+
 router.get('/perfil/seminario/:id', isLoggedIn, async (req, res) => {
     const { id }  = req.params;
     await dbConnect.prototype.registrarseEnSeminario(req, id);
@@ -87,6 +93,13 @@ router.get('/PerfilA/usuarios/quitarRol/:id', isLoggedInAndAdmin, async (req, re
     req.session.usuarios[id].ES_ADMIN = 0;
     req.flash('success', 'El usuario ha sido despojado de sus privilegios de admin')
     res.redirect('/PerfilA/usuarios');
+});
+
+router.get('/PerfilA/seminarios', isLoggedIn, async (req, res) => {
+    let seminarios = await dbConnect.prototype.getSeminarios(req);
+    let soyAdmin = true;
+    let mi_id = req.session.usuario.CD_USUARIO;
+    res.render('menu/seminarios', {seminarios, soyAdmin, mi_id});
 });
 
 router.get('/PerfilA/seminario/administrador/:id', isLoggedInAndAdmin, async (req, res) => {

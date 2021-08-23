@@ -110,13 +110,16 @@
                     </a>
                     <p class="m-2">{{DS_DESCRIPCION}}</p>
                     <p class="text-muted">
-                        {{dateFormat}}
+                        {{FECHA}}
                     </p>
                     <a class="btn btn-secondary" href="PerfilA/seminario/administrador/{{CD_SEMINARIO}}">
                         Menu
                     </a>
                     <a id="pop_register_user" class="btn btn-secondary" onclick="abrirInvitacion({{CD_SEMINARIO}})">
                         Invitar
+                    </a>
+                    <a id="pop_register_user" class="btn btn-secondary" onclick="abrirFinalizar({{CD_SEMINARIO}})">
+                        Finalizar
                     </a>
                 </div>
             </div>
@@ -149,16 +152,44 @@
     </div>
 </div>
 
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card text-center">
+                <div class="card-body" id="final">
+                <form action="/PerfilA/seminario/finalizar" method="POST" id="puntuarForm" class="form-container">
+                    <label><b>Esto eliminara el seminario de la lista de activos, ¿está usted segur@?</b></label>
+                    <input type="number" id="seminario_final" name="CD_SEMINARIO" class="form-control">
+                    <button type="submit" class="btn btn-success btn-block">Invitar</button>
+                </form>
+                <button class="btn btn-danger btn-block" onclick="cerrarFinalizar()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     document.getElementById("invitar").style.display = "none";
     document.getElementById("seminario_invitado").style.display = "none";
+    document.getElementById("final").style.display = "none";
+    document.getElementById("seminario_final").style.display = "none";
 
     function abrirInvitacion(id) {
         document.getElementById("seminario_invitado").value = id;
         document.getElementById("invitar").style.display = "block";
     }
+
+    function abrirFinalizar(id) {
+        document.getElementById("seminario_final").value = id;
+        document.getElementById("final").style.display = "block";
+    }
   
     function cerrarInvitacion() {
         document.getElementById("invitar").style.display = "none";
+    }
+
+    function cerrarFinalizar() {
+        document.getElementById("final").style.display = "none";
     }
 </script>
