@@ -18,7 +18,7 @@ passport.use('local.inicio', new LocalStrategy({
     if(result.recordset.length > 0) {
         let user = result.recordset[0];
         user.ESTA_EN_SEMINARIO = 0;
-        const validPass = password == user.DS_PASS//await helpers.matchPassword(password, user.DS_PASS.plaintext);
+        const validPass = password == user.DS_PASS;//await helpers.matchPassword(password, user.DS_PASS); 
         if(validPass){
             req.session.usuario = user;
             return done(null, user, req.flash('success', 'Bienvenido ' + user.DS_NOMBRE));
@@ -43,7 +43,7 @@ passport.use('local.inicio_alter', new LocalStrategy({
     if(result.recordset.length > 0) {
         let user = result.recordset[0];
         user.ESTA_EN_SEMINARIO = 0;
-        const validPass = password == user.DS_PASS//await helpers.matchPassword(password, user.DS_PASS.plaintext);
+        const validPass = password == user.DS_PASS// await helpers.matchPassword(password, user.DS_PASS);
         if(validPass){
             req.session.usuario = user;
             await dbConnect.prototype.registrarseEnSeminario(username, password, req.params.id);
@@ -73,8 +73,8 @@ passport.use('local.registro', new LocalStrategy({
         "DS_TWITTER": ""
 
     }
-    //newUser.password = await helpers.encryptPassword(password);
 
+   // newUser.DS_PASS = await helpers.encryptPassword(password);
     const request = new pool.Request();
     const result = await request
         .input("DS_CORREO", pool.VarChar(50), newUser.DS_CORREO)
@@ -104,7 +104,7 @@ passport.use('local.registro_alter', new LocalStrategy({
         "DS_TWITTER": ""
 
     }
-    //newUser.password = await helpers.encryptPassword(password);
+    //newUser.DS_PASS = await helpers.encryptPassword(password);
 
     const request = new pool.Request();
     const result = await request

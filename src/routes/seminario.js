@@ -36,26 +36,6 @@ router.get('/seminario/ponentes/votar', isLoggedIn, async (req, res) => {
     }
 });
 
-// router.get('/seminario/ponentes/votar', isLoggedIn, async (req, res) => {
-//     const id  = req.query.CD_USUARIO;
-//     if(req.session.seminario.ponentes[id].VOTADO ){
-//         req.flash("message", "Eres listo, pero no lo suficiente");
-//         res.redirect('/seminario/ponentes');
-//     }else if(req.session.usuario.CD_USUARIO == id ){
-//         req.flash("message", "No puedes votarte a ti mismo");
-//         res.redirect('/seminario/ponentes');
-//     }else{
-//         // req.session.seminario.ponentes[id].VOTADO = true;
-//         // req.session.seminario.ponentes[id].NM_PUNTOS += 10;
-//         req.session.seminario.ponentes = null;
-//         req.body.puntuacion = req.query.NM_PUNTOS;
-//         req.body.id = id;
-//         await dbConnect.prototype.votarPonente(req);
-//         req.flash("success", "Su voto fue emito con éxito");
-//         res.redirect('/seminario/ponentes');    
-//     }
-// });
-
 
 router.get('/seminario/ponentes/actualizar', isLoggedIn, async (req, res) => {
     req.session.seminario.ponentes = null; //Reiniciamos la lista local de usuarios para volver a llenarla con lo que haya en la base de datos

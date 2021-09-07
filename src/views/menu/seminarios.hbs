@@ -1,22 +1,19 @@
-{{#if ES_ADMIN }}
+{{#if soyAdmin }}
 <div class="container p-4">
     <div class="row">
     SEMINARIOS
         <table class="default">
             <tr><th>Nombre</th><th>Fecha</th><th>Autoria</th></tr>
         {{#each seminarios}}
-            <tr><td>{{DS_NOMBRE}}</td><td>{{FECHA}}</td>
-          {{#ifEquals CD_CREADOR mi_id}}
-            <td>Personal</td>
-            {{else}}
-            <td>Ajeno</td>
-        {{/ifEquals}}
+            <tr><td>{{DS_NOMBRE}}</td><td>{{FECHA}}</td><td>{{CREADOR}}</td>
+            <td><a class="btn btn-success btn-block" onclick="abrirDetalle({{CD_SEMINARIO}}, '{{DS_NOMBRE}}', '{{DS_DESCRIPCION}}', {{TIEMPO_PONENCIA}})">
+                Ver detalles
+            </a></td>
             </tr>
         {{/each}}
         </table>
     </div>
 </div>
-
 {{else}}
 <div class="container p-4">
     <div class="row">
@@ -32,8 +29,60 @@
 
 {{/if}}
 
+  <div class="container p-4" id="detalle">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card text-center">
+                <div class="card-header">
+                    <h3>Datos del seminario</h3>
+                </div>
+                <div class="card-body">
+                   <form action="actualizarSeminario" method="POST">
+                    <div class="form-group" >
+                        <input type="number" id="seminario_id" name="CD_SEMINARIO" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        Nombre: <input type="text" maxlength="50" id="seminario_nombre" name="DS_NOMBRE" placeholder="" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        Descripción: <textarea type="text" maxlength="250" id="seminario_descripcion" name="DS_DESCRIPCION" rows="4" cols="50" placeholder="" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        Nueva Fecha: <input type="date" id="fecha_seminario" name="FECHA" value=>
+                    <div class="form-group">
+                        Minutos para presentar: <input type="number"  min="1" max="30" id="seminario_tiempo" name="TIEMPO_PONENCIA" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-success btn-block">Guardar cambios</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
-        return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
-    });
+
+    cerrarDetalle();
+    document.getElementById("detalle").style.display = "none";
+    document.getElementById("seminario_id").style.display = "none";
+
+    function abrirDetalle(id, nombre, descripcion,tiempo) {
+        document.getElementById("seminario_id").value = id;
+
+        document.getElementById("seminario_nombre").value = nombre;
+        document.getElementById("seminario_nombre").placeholder = nombre;
+
+        document.getElementById("seminario_descripcion").value = descripcion;
+        document.getElementById("seminario_descripcion").placeholder = descripcion;
+
+        document.getElementById("seminario_tiempo").value = tiempo;
+        document.getElementById("seminario_tiempo").placeholder = tiempo;
+
+        document.getElementById("detalle").style.display = "block";
+    }
+    function cerrarDetalle() {
+        document.getElementById("detalle").style.display = "none";
+    }
 </script>

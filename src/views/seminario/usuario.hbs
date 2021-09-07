@@ -1,21 +1,45 @@
+{{#if soyAdmin }}
 <div class="container p-4">
     <div class="row">
-    Ranking usuarios por puntos pregunta
+    Ranking de Asistentes
         <table class="default">
-            <tr><th>Nombre</th><th>Twitter</th><th>Rol</th><th>Puntos Pregunta</th></tr>
+            <tr><th>Nombre</th><th>Twitter</th><th>Puntos Pregunta</th><th>Rol</th></tr>
         {{#each usuarios}}
             <tr><td>{{DS_NOMBRE}}</td><td>{{DS_TWITTER}}</td>
-                {{#if ES_PONENTE }}
-                    <td>Asistente</td>
-                {{else}}
-                    <td>Ponente</td>
-                {{/if}}
                 <td>{{NM_PUNTOS_CUESTION}}</td>
+                {{#if ES_PONENTE }}
+                    <td>Ponente</td>
+                {{else}}
+                <td>Asistente</td>
+                <td><a class="btn btn-secondary" href="usuarios/otorgarPonente/{{CD_USUARIO}}">
+                    Hacer Ponente
+                </a></td>
+                {{/if}}
             </tr>
         {{/each}}
         </table>
     </div>
 </div>
+{{else}}
+<div class="container p-4">
+    <div class="row">
+    Ranking Asistentes
+        <table class="default">
+            <tr><th>Nombre</th><th>Twitter</th><th>Puntos Pregunta</th><th>Rol</th></tr>
+        {{#each usuarios}}
+            <tr><td>{{DS_NOMBRE}}</td><td>{{DS_TWITTER}}</td>
+                <td>{{NM_PUNTOS_CUESTION}}</td>
+                {{#if ES_PONENTE }}
+                    <td>Ponente</td>
+                {{else}}
+                    <td>Asistente</td>
+                {{/if}}
+            </tr>
+        {{/each}}
+        </table>
+    </div>
+</div>
+{{/if}}
 
 {{#if soyAdmin }}
     <div class="container p-4">

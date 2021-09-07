@@ -17,8 +17,9 @@ router.get('/perfil', isLoggedIn, async (req, res) => {
 
 router.get('/perfil/seminarios', isLoggedIn, async (req, res) => {
     let seminarios = await dbConnect.prototype.getSeminariosParticipado(req);
+    let seminario = req.session.usuario.EN_SEMINARIO;
     let soyAdmin = false;
-    res.render('menu/seminarios', {seminarios, soyAdmin});
+    res.render('menu/seminarios', {seminarios, seminario, soyAdmin});
 });
 
 router.get('/perfil/seminario/:id', isLoggedIn, async (req, res) => {
@@ -95,11 +96,19 @@ router.get('/PerfilA/usuarios/quitarRol/:id', isLoggedInAndAdmin, async (req, re
     res.redirect('/PerfilA/usuarios');
 });
 
-router.get('/PerfilA/seminarios', isLoggedIn, async (req, res) => {
+router.get('/PerfilA/seminarios', isLoggedInAndAdmin, async (req, res) => {
     let seminarios = await dbConnect.prototype.getSeminarios(req);
+    let seminario = req.session.usuario.EN_SEMINARIO;
     let soyAdmin = true;
     let mi_id = req.session.usuario.CD_USUARIO;
-    res.render('menu/seminarios', {seminarios, soyAdmin, mi_id});
+    res.render('menu/seminarios', { helpers: { ifEquals: function(arg1, arg2, options) {return (arg1 == arg2) ? options.fn(this) : options.inverse(this);} },
+     seminarios, seminario, soyAdmin, mi_id});
+});
+
+router.post('/PerfilA/actualizarSeminario', isLoggedInAndAdmin, async (req, res) => {
+    await dbConnect.prototype.actualizarSeminario(req);
+    req.flash('success', 'El seminario se actualizo correctamente');
+    res.redirect('/PerfilA/seminarios');
 });
 
 router.get('/PerfilA/seminario/administrador/:id', isLoggedInAndAdmin, async (req, res) => {
