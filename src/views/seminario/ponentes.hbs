@@ -1,12 +1,12 @@
 
 <div class="container p-4">
     <div class="row">
-    Ranking de Ponentes
         <table class="default">
-            <tr><th>Nombre</th><th>Twitter</th><th>Puntos Ponencia</th></tr>
+            <caption>Ranking de Ponentes</caption>
+            <tr><th>Nombre</th><th>Twitter</th><th>Puntos Ponencia</th><th>Preguntas</th><th>Votos</th></tr>
         {{#each ponentes}}
             <tr><td>{{DS_NOMBRE}}</td><td>{{DS_TWITTER}}</td><td>{{NM_PUNTOS}}</td>
-                <td><a class="btn btn-secondary" href="ponentes/preguntar/{{CD_USUARIO}}">
+                <td><a class="btn btn-success btn-block" href="ponentes/preguntar/{{CD_USUARIO}}">
                     Preguntar
                 </a></td>
             {{#if VOTADO }}

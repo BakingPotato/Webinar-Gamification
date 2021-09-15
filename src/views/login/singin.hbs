@@ -12,7 +12,7 @@
                         <form action="/inicio" method="POST">
                     {{/if}} 
                         <div class="form-group">
-                        <input type="text" maxlength="50" name="username" placeholder="Su correo" class="form-control" autofocus>
+                        <input type="text" maxlength="50" name="username" placeholder="Correo eléctronico" class="form-control" autofocus>
                     </div>
                     <div class="form-group">
                         <input type="password" maxlength="50" name="pass" placeholder="Contraseña" class="form-control">
@@ -25,9 +25,4 @@
             </div>
         </div>
     </div>
-    {{#if id }}
-    <a href="/registro/{{id}}">¿Nuevo usuario? Registrese aquí, se le inscribira automaticamente en el seminario</a>
-    {{else}}
-    <a href="/registro">¿Nuevo usuario? Registrese aquí</a>
-    {{/if}}
 </div>

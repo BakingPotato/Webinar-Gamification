@@ -2,6 +2,7 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const router = express.Router();
 const dbConnect = require('../Memory')
+const helpers = require('../lib/helpers');
 const { isLoggedIn, isLoggedInAndAdmin } = require('../lib/auth');
 
 //Menu de usuario
@@ -36,8 +37,12 @@ router.get('/perfil/registro/:id', isLoggedIn, (req, res) => {
 });
 
 router.post('/perfil/actualizarPerfil', isLoggedIn, async (req, res) => {
-    await dbConnect.prototype.actualizarUsuario(req);
-    req.flash('success', 'Su usuario se actualizo correctamente');
+    let result = await dbConnect.prototype.actualizarUsuario(req);
+    if(result == -2){
+        req.flash('message', 'El correo '+req.body.DS_CORREO+' ya existe');
+    }else{
+        req.flash('success', 'Su usuario se actualizo correctamente');
+    }
     if(req.session.usuario.ES_ADMIN == 0){
         res.redirect('/perfil');
     }else{
@@ -164,35 +169,38 @@ router.post('/PerfilA/seminario/invitar', isLoggedInAndAdmin, async (req, res) =
 });
 
 router.post('/PerfilA/registrarU', isLoggedInAndAdmin, async (req, res) => {
-    await dbConnect.prototype.registrarUsuario(req);
-    req.flash('success', 'Su usuario se actualizo correctamente');
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'ludonariotfg@gmail.com',
-            pass: 'TFGFinal20-21'
-        }
-        });
-    
-        var mensaje = "Hola, le informamos que ha sido registrado en la plataforma de ludonario. Para iniciar sesión introduzca este correo y la constraseña: " + req.body.DS_PASS
-        var mailOptions = {
-            from: 'ludonariotfg@gmail.com',
-            to: req.body.DS_CORREO,
-            subject: mensaje
-        };
-    
-        transporter.sendMail(mailOptions, function(error, info){
-            if (error) {
-              console.log(error);
-            } else {
-              console.log('Email enviado: ' + info.response);
-            }
-        });
-      
-    if(req.session.usuario.ES_ADMIN == 0){
-        res.redirect('/perfil');
-    }else{
+    let desencrypted = req.body.DS_PASS;
+    req.body.DS_PASS = await helpers.encryptPassword(req.body.DS_PASS);
+    let result = await dbConnect.prototype.registrarUsuario(req);
+    if(result == -2){
+        req.flash('message', 'El correo '+ req.body.DS_CORREO +' ya esta uso');
         res.redirect('/PerfilA');
+    }else{
+        req.flash('success', 'Su usuario se actualizo correctamente');
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'ludonariotfg@gmail.com',
+                pass: 'TFGFinal20-21'
+            }
+            });
+        
+            var mensaje = "Hola, le informamos que ha sido registrado en la plataforma de ludonario"
+            var mailOptions = {
+                from: 'ludonariotfg@gmail.com',
+                to: req.body.DS_CORREO,
+                subject: mensaje,
+                html: '<p>Hola, le informamos que ha sido registrado en la plataforma de ludonario. Para iniciar sesión introduzca este correo y la constraseña: ' + desencrypted + '</p>'
+    
+            };
+        
+            transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log('Email enviado: ' + info.response);
+                }
+            });
     }
 });
 

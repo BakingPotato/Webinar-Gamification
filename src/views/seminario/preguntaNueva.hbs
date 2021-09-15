@@ -22,8 +22,8 @@
 
 <div class="container p-4">
     <div class="row">
-    Otras preguntas dirigidas a {{usuario.DS_NOMBRE}}
         <table class="default">
+            <caption>Preguntas dirigidas a {{usuario.DS_NOMBRE}}</caption> 
             <tr><th>Pregunta</th><th>De</th><th>Puntos</th></tr>
         {{#each preguntas}}
             <tr><td>{{DS_CUESTION}}</td><td>{{DS_ORIGEN}}</td><td>{{NM_VOTOS}}</td>

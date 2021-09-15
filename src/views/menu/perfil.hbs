@@ -1,39 +1,35 @@
   <div class="container p-4">
-    <div class="row">
-        <div class="col-md-4 mx-auto">
-            <div class="card text-center">
-                <div class="card-header">
-                    <h3>Sus datos</h3>
-                </div>
-                <div class="card-body">
-                   <form action="perfil/actualizarPerfil" method="POST">
-                    <div class="form-group">
-                        Correo: <input type="text" maxlength="50" name="DS_CORREO" placeholder="{{user.DS_CORREO}}" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        Nombre de usuario: <input type="text" maxlength="50" name="DS_NOMBRE" placeholder="{{user.DS_NOMBRE}}" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        Usuario de twitter: <input type="text" maxlength="50" name="DS_TWITTER" placeholder="{{user.DS_TWITTER}}" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        Descripción: <textarea type="text" maxlength="250" name="DS_DESCRIPCION" rows="4" cols="50" placeholder="{{user.DS_DESCRIPCION}}" class="form-control"></textarea>
-                    </div>
-                    <div class="form-group">
-                        Contraseña: <input type="password" maxlength="50" name="DS_PASS" placeholder="{{user.DS_PASS}}" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        Puntos Ponencia: {{user.NM_PUNTOS}}
-                    </div>
-                    <div class="form-group">
-                        Puntos Preguntas: {{user.NM_PUNTOS_CUESTION}}
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-success btn-block">Guardar cambios</button>
-                    </div>
-                    </form>
-                </div>
+    <div class="card text-center">
+        <div class="card-header">
+            <h3>Sus datos</h3>
+        </div>
+        <div class="card-body">
+            <form action="perfil/actualizarPerfil" method="POST">
+            <div class="form-group">
+                Correo: <input type="text" maxlength="50" name="DS_CORREO" placeholder="{{usuario.DS_CORREO}}" class="form-control">
             </div>
+            <div class="form-group">
+                Nombre de usuario: <input type="text" maxlength="50" name="DS_NOMBRE" placeholder="{{usuario.DS_NOMBRE}}" class="form-control">
+            </div>
+            <div class="form-group">
+                Usuario de twitter: <input type="text" maxlength="50" name="DS_TWITTER" placeholder="{{usuario.DS_TWITTER}}" class="form-control">
+            </div>
+            <div class="form-group">
+                Descripción: <textarea type="text" maxlength="250" name="DS_DESCRIPCION" rows="4" cols="50" placeholder="{{usuario.DS_DESCRIPCION}}" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                Nueva contraseña: <input type="password" maxlength="50" name="DS_PASS" placeholder="*****" value = "" class="form-control">
+            </div>
+            <div class="form-group">
+                Puntos Ponencia: {{usuario.NM_PUNTOS}}
+            </div>
+            <div class="form-group">
+                Puntos Preguntas: {{usuario.NM_PUNTOS_CUESTION}}
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success btn-block">Guardar cambios</button>
+            </div>
+            </form>
         </div>
     </div>
 </div>

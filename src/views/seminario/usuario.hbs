@@ -1,17 +1,20 @@
 {{#if soyAdmin }}
 <div class="container p-4">
     <div class="row">
-    Ranking de Asistentes
         <table class="default">
-            <tr><th>Nombre</th><th>Twitter</th><th>Puntos Pregunta</th><th>Rol</th></tr>
+            <caption>Ranking de Asistentes</caption>
+            <tr><th>Nombre</th><th>Twitter</th><th>Puntos Pregunta</th><th>Rol</th><th>Permisos</th></tr>
         {{#each usuarios}}
             <tr><td>{{DS_NOMBRE}}</td><td>{{DS_TWITTER}}</td>
                 <td>{{NM_PUNTOS_CUESTION}}</td>
                 {{#if ES_PONENTE }}
                     <td>Ponente</td>
+                    <td><a class="btn btn-danger btn-block"  disabled="disabled" href="">
+                        Quitarle Admin
+                    </a></td>
                 {{else}}
                 <td>Asistente</td>
-                <td><a class="btn btn-secondary" href="usuarios/otorgarPonente/{{CD_USUARIO}}">
+                <td><a class="btn btn-success btn-block" href="usuarios/otorgarPonente/{{CD_USUARIO}}">
                     Hacer Ponente
                 </a></td>
                 {{/if}}
@@ -23,8 +26,8 @@
 {{else}}
 <div class="container p-4">
     <div class="row">
-    Ranking Asistentes
         <table class="default">
+            <caption>Ranking de Asistentes</caption>
             <tr><th>Nombre</th><th>Twitter</th><th>Puntos Pregunta</th><th>Rol</th></tr>
         {{#each usuarios}}
             <tr><td>{{DS_NOMBRE}}</td><td>{{DS_TWITTER}}</td>
@@ -44,13 +47,13 @@
 {{#if soyAdmin }}
     <div class="container p-4">
         <div class="row">
-        Lista Espera de Ponentes
             <table class="default">
-                <tr><th>Nombre</th><th>Correo</th></tr>
+                <caption>Lista de espera de Ponentes</caption>
+                <tr><th>Nombre</th><th>Correo</th><th>Permisos</th></tr>
             {{#each listaEspera}}
                 <tr><td>{{DS_NOMBRE}}</td>
                     <td>{{DS_CORREO}}</td>
-                        <td><a class="btn btn-secondary" href="usuarios/otorgarPonente/{{CD_USUARIO}}">
+                        <td><a class="btn btn-secondary btn-block" href="usuarios/otorgarPonente/{{CD_USUARIO}}">
                             Hacer Ponente
                         </a></td>
                 </tr>

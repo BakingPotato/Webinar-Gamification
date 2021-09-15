@@ -1,12 +1,12 @@
 {{#if soyAdmin }}
 <div class="container p-4">
     <div class="row">
-    SEMINARIOS
         <table class="default">
-            <tr><th>Nombre</th><th>Fecha</th><th>Autoria</th></tr>
+            <caption>Seminarios de interAppctua</caption>
+            <tr><th>Nombre</th><th>Fecha</th><th>Autoria</th><th>Acción</th></tr>
         {{#each seminarios}}
             <tr><td>{{DS_NOMBRE}}</td><td>{{FECHA}}</td><td>{{CREADOR}}</td>
-            <td><a class="btn btn-success btn-block" onclick="abrirDetalle({{CD_SEMINARIO}}, '{{DS_NOMBRE}}', '{{DS_DESCRIPCION}}', {{TIEMPO_PONENCIA}})">
+            <td><a class="btn btnTabla btn-success btn-block" onclick="abrirDetalle({{CD_SEMINARIO}}, '{{DS_NOMBRE}}', '{{DS_DESCRIPCION}}', {{TIEMPO_PONENCIA}})">
                 Ver detalles
             </a></td>
             </tr>
@@ -17,7 +17,7 @@
 {{else}}
 <div class="container p-4">
     <div class="row">
-    SEMINARIOS
+        <caption>Seminarios de interAppctua</caption>
         <table class="default">
             <tr><th>Nombre</th><th>Fecha</th></tr>
         {{#each seminarios}}

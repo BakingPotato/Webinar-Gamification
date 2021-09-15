@@ -18,8 +18,9 @@ passport.use('local.inicio', new LocalStrategy({
     if(result.recordset.length > 0) {
         let user = result.recordset[0];
         user.ESTA_EN_SEMINARIO = 0;
-        const validPass = password == user.DS_PASS;//await helpers.matchPassword(password, user.DS_PASS); 
+        const validPass = await helpers.matchPassword(password, user.DS_PASS); 
         if(validPass){
+            user.DS_PASS = password;
             req.session.usuario = user;
             return done(null, user, req.flash('success', 'Bienvenido ' + user.DS_NOMBRE));
         }else{
@@ -43,13 +44,14 @@ passport.use('local.inicio_alter', new LocalStrategy({
     if(result.recordset.length > 0) {
         let user = result.recordset[0];
         user.ESTA_EN_SEMINARIO = 0;
-        const validPass = password == user.DS_PASS// await helpers.matchPassword(password, user.DS_PASS);
+        const validPass = await helpers.matchPassword(password, user.DS_PASS);
         if(validPass){
+            user.DS_PASS = password;
             req.session.usuario = user;
             await dbConnect.prototype.registrarseEnSeminario(username, password, req.params.id);
             return done(null, user, req.flash('success', 'Bienvenido ' + user.DS_NOMBRE));
         }else{
-            done(null, false, req.flash('message', 'Contraseña incorrecta'))
+            return done(null, false, req.flash('message', 'Contraseña incorrecta'))
         }
     } else {
         return done(null, false, req.flash('message', 'No se ha encontrado su dirección de correo'))
@@ -74,17 +76,23 @@ passport.use('local.registro', new LocalStrategy({
 
     }
 
-   // newUser.DS_PASS = await helpers.encryptPassword(password);
+   newUser.DS_PASS = await helpers.encryptPassword(password);
     const request = new pool.Request();
     const result = await request
         .input("DS_CORREO", pool.VarChar(50), newUser.DS_CORREO)
         .input("DS_NOMBRE", pool.VarChar(50), newUser.DS_NOMBRE)
-        .input("DS_PASS", pool.VarChar(50), newUser.DS_PASS)
+        .input("DS_PASS", pool.VarChar(255), newUser.DS_PASS)
         .input("ES_ADMIN", pool.Bit, 0)
         .execute('REGISTRAR_USUARIO')
-    newUser.CD_USUARIO = result.returnValue
-    req.session.usuario = newUser;
-    return done(null, newUser, req.flash('success', 'Bienvenido ' + newUser.DS_NOMBRE));
+    if(result.returnValue == -2){
+        return done(null, false, req.flash('message', 'Este correo ya esta en uso'));
+    }else{
+        newUser.CD_USUARIO = result.returnValue
+        newUser.DS_PASS = password;
+        req.session.usuario = newUser;
+        return done(null, newUser, req.flash('success', 'Bienvenido ' + newUser.DS_NOMBRE));
+    }
+
 }))
 
 passport.use('local.registro_alter', new LocalStrategy({
@@ -104,19 +112,25 @@ passport.use('local.registro_alter', new LocalStrategy({
         "DS_TWITTER": ""
 
     }
-    //newUser.DS_PASS = await helpers.encryptPassword(password);
+    newUser.DS_PASS = await helpers.encryptPassword(password);
 
     const request = new pool.Request();
     const result = await request
         .input("DS_CORREO", pool.VarChar(50), newUser.DS_CORREO)
         .input("DS_NOMBRE", pool.VarChar(50), newUser.DS_NOMBRE)
-        .input("DS_PASS", pool.VarChar(50), newUser.DS_PASS)
+        .input("DS_PASS", pool.VarChar(60), newUser.DS_PASS)
         .input("ES_ADMIN", pool.Bit, 0)
         .execute('REGISTRAR_USUARIO')
-    newUser.CD_USUARIO = result.returnValue
-    req.session.usuario = newUser;
-    await dbConnect.prototype.registrarseEnSeminario(username, password, req.params.id);
-    return done(null, newUser, req.flash('success', 'Bienvenido ' + newUser.DS_NOMBRE + ', se le registro en el seminario con exito')); 
+    if(result.returnValue == -2){
+        return done(null, false, req.flash('message', 'Este correo ya esta en uso'));
+    }else{
+        newUser.CD_USUARIO = result.returnValue
+        newUser.DS_PASS = password;
+        req.session.usuario = newUser;
+        await dbConnect.prototype.registrarseEnSeminario(username, password, req.params.id);
+        return done(null, newUser, req.flash('success', 'Bienvenido ' + newUser.DS_NOMBRE + ', se le registro en el seminario con exito')); 
+    }
+
 }))
 
 passport.serializeUser((user, done)=>{

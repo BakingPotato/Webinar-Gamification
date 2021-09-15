@@ -1,0 +1,124 @@
+body {
+    background: #ffffff;
+  }
+  
+  .navbar {
+    background: rgb(0, 0, 0) !important;
+  }
+  
+  .nav-link {
+    color: #fff !important;
+  }
+
+
+
+  
+form{
+    float:left; /*to clear the floats of inner elements,usefull if you wanna add a border or background image*/
+    width:300px;
+}
+
+label{
+    float:left;
+    margin-bottom:3%;
+}
+
+input{
+    float:left;
+    width:100%;
+    margin-bottom: 3%;
+}
+
+.card {
+    transition: 0.3s;
+    border-radius: 5px; /* 5px rounded corners */
+    background-color: rgb(0, 0, 0);
+    color: #fff;
+    width: max-content;
+  }
+
+/* Contenedores de datos */
+.container_datos {
+    float: left;
+    padding-top: 5%;
+    width:100%;
+    display: flex;
+    justify-content: center;
+}
+
+.container_seminarios {
+    padding-top: 5%;
+    float: left;
+    display: flex;
+    width:100%;
+    justify-content: center;
+}
+
+.container_popup_seminario {
+    padding-top: 5%;
+    float: left;
+    width:100%;
+}
+
+.container_perfilA {
+    width: 100;
+    vertical-align: top;
+  }
+
+/* DIVS */
+
+.div_nuevo_seminario {
+    float:left;
+    padding-left: 4%;
+    padding-bottom: 3%;
+}
+
+.div_nuevo_usuario {
+    float: left;
+    padding-left: 4%;
+    padding-bottom: 3%;
+}
+
+
+.seminario_card{
+     padding-right: 3%;
+     padding-bottom: 3%;
+     padding-left: 3%;
+     float: left;
+}
+
+/* TABLAS */
+table {
+    width: 100%;
+    border: 1% solid #000;
+    caption-side: top;
+ }
+
+ th, td {
+    width: 25%;
+    vertical-align: top;
+    border: 1px solid #000;
+    border-collapse: collapse;
+    padding: 0.3em;
+    caption-side: bottom;
+ }
+
+ caption {
+    padding: 0.3em;
+    color: #fff;
+    background: #000;
+    text-align: center;
+ }
+
+ th {
+    background: rgb(100, 100, 100);
+    color: #fff;
+    text-align: center;
+ }
+
+ td {
+    text-align: left;
+    background: rgb(211, 210, 210);
+    color: rgb(0, 0, 0);
+ }
+
