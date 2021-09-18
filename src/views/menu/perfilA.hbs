@@ -41,16 +41,16 @@
             <div class="card-body">
                 <form action="PerfilA/registrarSeminario" method="POST">
                 <div class="form-group">
-                    Nombre: <input type="text" maxlength="50" name="DS_NOMBRE" placeholder="Seminario" class="form-control">
+                    Nombre: <input type="text" maxlength="50" name="DS_NOMBRE" placeholder="Seminario" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <input type="date" id="fecha_seminario" name="FECHA" value='05-05-2020'>
+                    Fecha: <input type="date" id="fecha_seminario" name="FECHA" value='05-05-2020'>
                 </div>
                 <div class="form-group">
-                    Descripción: <textarea type="text" maxlength="250" name="DS_DESCRIPCION" rows="4" cols="50" placeholder="Pequeña descripción del seminario" class="form-control"></textarea>
+                    Descripción: <textarea type="text" maxlength="250" name="DS_DESCRIPCION" rows="4" cols="50" placeholder="Pequeña descripción del seminario" class="form-control" required></textarea>
                 </div>
                 <div class="form-group">
-                    Minutos para presentar: <input type="number"  min="1" max="30" value=5 name="TIEMPO_PONENCIA" placeholder="5" class="form-control">
+                    Minutos para presentar: <input type="number"  min="1" max="30" value=5 name="TIEMPO_PONENCIA" placeholder="5" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-success btn-block">Registrar</button>
@@ -67,17 +67,26 @@
             </div>
             <div class="card-body">
                 <form action="PerfilA/registrarU" method="POST">
+               <b>Correo que enviara las invitaciones:</b> 
                 <div class="form-group">
-                    Correo: <input type="text" maxlength="50" name="DS_CORREO" placeholder="correo@hmail.com" class="form-control">
+                    Correo: <input type="text" maxlength="50" name="email" value={{user.DS_CORREO}} class="form-control" required>
                 </div>
                 <div class="form-group">
-                    Nombre del usuario: <input type="text" maxlength="50" name="DS_NOMBRE" placeholder="nombre y apellidos" class="form-control">
+                    Contraseña: <input type="password" maxlength="50" name="email_pass" placeholder="Contraseña" class="form-control" required>
+                </div>
+                <br>
+                <b>Datos del nuevo usuario:</b>
+                <div class="form-group">
+                    Correo: <input type="text" maxlength="50" name="DS_CORREO" placeholder="correo@hmail.com" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    Contraseña: <input type="password" maxlength="50" name="DS_PASS" placeholder="pass" class="form-control">
+                    Nombre del usuario: <input type="text" maxlength="50" name="DS_NOMBRE" placeholder="Nombre y apellidos" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-success btn-block">Registrar</button>
+                    Contraseña: <input type="password" maxlength="50" name="DS_PASS" placeholder="Contraseña" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success btn-block" title="Asegurese de tener activado acceso de aplicaciones poco seguras en su correo antes de registrar">Registrar</button>
                 </div>
                 </form>
             </div>
@@ -93,7 +102,6 @@
                     <h3 class="card-title text-uppercase">
                         {{DS_NOMBRE}}
                     </h3>
-                </a>
                 <p class="m-2">{{DS_DESCRIPCION}}</p>
                 <p class="text">
                     {{FECHA}}
@@ -120,11 +128,26 @@
     <div class="card text-center">
         <div class="card-body" id="invitar">
         <form action="/PerfilA/seminario/invitar" method="POST" id="puntuarForm" class="form-container">
-            <label for="email"><b>Email del usuario a invitar</b></label>
-            <input type="text" maxlength="50" name="DS_CORREO" placeholder="correo@gmail.com" class="form-control">
+            <div>
+                <b>Correo que enviara las invitaciones:</b>
+                <div class="form-group">
+                    Correo: <input type="text" maxlength="50" name="email" value={{user.DS_CORREO}} class="form-control" required>
+                </div>
+                <div class="form-group">
+                    Contraseña: <input type="password" maxlength="50" name="email_pass" placeholder="Contraseña" class="form-control" required>
+                </div>
+            </div>
+            <br>
+            <div>
+                <b>Email(s) a invitar:</b>
+                <div id="email_invitado" class="form-group">
+                    <input type="text" maxlength="50" name="DS_CORREO[]" placeholder="email@ejemplo.es" class="form-control">
+                </div>
+            </div>
             <input type="number" id="seminario_invitado" name="CD_SEMINARIO" class="form-control">
-            <button type="submit" class="btn btn-success btn-block">Invitar</button>
+            <button type="submit" class="btn btn-success btn-block" title="Asegurese de tener activado acceso de aplicaciones poco seguras en su correo antes de enviar">Invitar</button>
         </form>
+        <button class="btn btn-block btn-success" onclick="añadirEmail()">Añadir más</button>
         <button class="btn btn-danger btn-block" onclick="cerrarInvitacion()">Cancelar</button>
         </div>
     </div>
@@ -133,6 +156,11 @@
 <script>
     document.getElementById("invitar").style.display = "none";
     document.getElementById("seminario_invitado").style.display = "none";
+
+    function añadirEmail() {
+        var html = '<div class="form-group"><input type="text" maxlength="50" name="DS_CORREO[]" placeholder="email@ejemplo.es" class="form-control"></div>';
+        document.getElementById("email_invitado").innerHTML += html;
+    }
 
     function abrirInvitacion(id) {
         document.getElementById("seminario_invitado").value = id;

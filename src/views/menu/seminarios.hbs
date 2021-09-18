@@ -3,10 +3,10 @@
     <div class="row">
         <table class="default">
             <caption>Seminarios de interAppctua</caption>
-            <tr><th>Nombre</th><th>Fecha</th><th>Autoria</th><th>Acción</th></tr>
+            <tr><th>Nombre</th><th class="field-big">Descripción</th><th>Fecha</th><th>Autoria</th><th>Acción</th></tr>
         {{#each seminarios}}
-            <tr><td>{{DS_NOMBRE}}</td><td>{{FECHA}}</td><td>{{CREADOR}}</td>
-            <td><a class="btn btnTabla btn-success btn-block" onclick="abrirDetalle({{CD_SEMINARIO}}, '{{DS_NOMBRE}}', '{{DS_DESCRIPCION}}', {{TIEMPO_PONENCIA}})">
+            <tr><td>{{DS_NOMBRE}}</td><td class="field-big">{{DS_DESCRIPCION}}</td><td>{{FECHA}}</td><td>{{CREADOR}}</td>
+            <td><a class="btn btn-success btn-block" onclick="abrirDetalle({{CD_SEMINARIO}}, '{{DS_NOMBRE}}', '{{DS_DESCRIPCION}}', {{TIEMPO_PONENCIA}})">
                 Ver detalles
             </a></td>
             </tr>
@@ -17,11 +17,11 @@
 {{else}}
 <div class="container p-4">
     <div class="row">
-        <caption>Seminarios de interAppctua</caption>
         <table class="default">
-            <tr><th>Nombre</th><th>Fecha</th></tr>
+            <caption>Seminarios de interAppctua</caption>
+            <tr><th>Nombre</th><th class="field-big">Descripción</th><th>Fecha</th>
         {{#each seminarios}}
-            <tr><td>{{DS_NOMBRE}}</td><td>{{FECHA}}</td></tr>
+            <tr> <tr><td>{{DS_NOMBRE}}</td><td class="field-big">{{DS_DESCRIPCION}}</td><td>{{FECHA}}</td></tr>
         {{/each}}
         </table>
     </div>

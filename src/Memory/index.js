@@ -77,13 +77,21 @@ class databaseConnect extends IDriver {
         .input("DS_CORREO", pool.VarChar(50), req.body.DS_CORREO ? req.body.DS_CORREO : null)
         .input("DS_NOMBRE", pool.VarChar(50),  req.body.DS_NOMBRE ?  req.body.DS_NOMBRE : null)
         .input("DS_DESCRIPCION", pool.VarChar(250),  req.body.DS_DESCRIPCION ? req.body.DS_DESCRIPCION : null)
-        .input("DS_PASS", pool.VarChar(50), pass)
+        .input("DS_PASS", pool.VarChar(255), pass)
         .input("DS_TWITTER", pool.VarChar(50),  req.body.DS_TWITTER ?  req.body.DS_TWITTER : null)
         .execute('ACTUALIZAR_USUARIO')
         if(result.returnValue != -2){
             req.session.usuario = {}; req.session.usuario = result.recordset[0];
         }
     return result.returnValue;
+    }
+
+    async comprobarCorreo(req){
+        const request = new pool.Request();
+        const result = await request
+            .input("DS_CORREO", pool.VarChar(50), req.body.DS_CORREO)
+            .execute('OBTENER_USUARIO_POR_LOGIN')
+        return result;
     }
 
     async registrarUsuario(req){

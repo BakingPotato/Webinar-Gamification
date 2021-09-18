@@ -1,4 +1,4 @@
-  <div class="container p-4">
+  <div class="container_datos">
     <div class="card text-center">
         <div class="card-header">
             <h3>Sus datos</h3>
@@ -6,25 +6,25 @@
         <div class="card-body">
             <form action="perfil/actualizarPerfil" method="POST">
             <div class="form-group">
-                Correo: <input type="text" maxlength="50" name="DS_CORREO" placeholder="{{usuario.DS_CORREO}}" class="form-control">
+                Correo: <input type="text" maxlength="50" name="DS_CORREO" placeholder="{{user.DS_CORREO}}" class="form-control">
             </div>
             <div class="form-group">
-                Nombre de usuario: <input type="text" maxlength="50" name="DS_NOMBRE" placeholder="{{usuario.DS_NOMBRE}}" class="form-control">
+                Nombre de usuario: <input type="text" maxlength="50" name="DS_NOMBRE" placeholder="{{user.DS_NOMBRE}}" class="form-control">
             </div>
             <div class="form-group">
-                Usuario de twitter: <input type="text" maxlength="50" name="DS_TWITTER" placeholder="{{usuario.DS_TWITTER}}" class="form-control">
+                Usuario de twitter: <input type="text" maxlength="50" name="DS_TWITTER" placeholder="{{user.DS_TWITTER}}" class="form-control">
             </div>
             <div class="form-group">
-                Descripción: <textarea type="text" maxlength="250" name="DS_DESCRIPCION" rows="4" cols="50" placeholder="{{usuario.DS_DESCRIPCION}}" class="form-control"></textarea>
+                Descripción: <textarea type="text" maxlength="250" name="DS_DESCRIPCION" rows="4" cols="50" placeholder="{{user.DS_DESCRIPCION}}" class="form-control"></textarea>
             </div>
             <div class="form-group">
                 Nueva contraseña: <input type="password" maxlength="50" name="DS_PASS" placeholder="*****" value = "" class="form-control">
             </div>
             <div class="form-group">
-                Puntos Ponencia: {{usuario.NM_PUNTOS}}
+                Puntos Ponencia: {{user.NM_PUNTOS}}
             </div>
             <div class="form-group">
-                Puntos Preguntas: {{usuario.NM_PUNTOS_CUESTION}}
+                Puntos Preguntas: {{user.NM_PUNTOS_CUESTION}}
             </div>
             <div class="form-group">
                 <button class="btn btn-success btn-block">Guardar cambios</button>
@@ -34,34 +34,29 @@
     </div>
 </div>
 
-  
-<div class="container p-4">
-    <div class="row">
-        SEMINARIOS
-        {{#each seminarios}}
-        <div class="col-md-3">
-            <div class="card text-center">
-                <div class="card-body">
-                        <h3 class="card-title text-uppercase">
-                            {{DS_NOMBRE}}
-                        </h3>
-                    </a>
-                    <p class="m-2">{{DS_DESCRIPCION}}</p>
-                    <p class="text-muted">
-                        {{FECHA}}
-                    </p>
-                    <a class="btn btn-secondary" href="/perfil/seminario/{{CD_SEMINARIO}}">
-                        Entrar
-                    </a>
-                </div>
+<div class="container_seminarios">
+    {{#each seminarios}}
+    <div class="seminario_card">
+        <div class="card text-center">
+            <div class="card-body">
+                    <h3 class="card-title text-uppercase">
+                        {{DS_NOMBRE}}
+                    </h3>
+                <p class="m-2">{{DS_DESCRIPCION}}</p>
+                <p class="text">
+                    {{FECHA}}
+                </p>
+                <a class="btn btn-secondary" href="perfil/seminario/{{CD_SEMINARIO}}">
+                    Entrar
+                </a>
             </div>
         </div>
-        {{else}}
-        <div class="col-md-4 mx-auto">
-            <div class="card card-body text-center">
-                <p>No hay seminarios activos ahora mismo</p>
-            </div>
-        </div>
-        {{/each}}
     </div>
+    {{else}}
+    <div class="col-md-4 mx-auto">
+        <div class="card card-body text-center">
+            <p>No hay seminarios activos ahora mismo</p>
+        </div>
+    </div>
+    {{/each}}
 </div>

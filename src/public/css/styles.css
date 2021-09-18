@@ -15,7 +15,11 @@ body {
   
 form{
     float:left; /*to clear the floats of inner elements,usefull if you wanna add a border or background image*/
-    width:300px;
+    width: 100%;
+}
+
+.form-group{
+  padding: 1%;
 }
 
 label{
@@ -58,6 +62,8 @@ input{
     padding-top: 5%;
     float: left;
     width:100%;
+    display: flex;
+    justify-content: center;
 }
 
 .container_perfilA {
@@ -95,8 +101,9 @@ table {
  }
 
  th, td {
-    width: 25%;
-    vertical-align: top;
+    width: 8%;
+    vertical-align: center;
+    text-align: center;
     border: 1px solid #000;
     border-collapse: collapse;
     padding: 0.3em;
@@ -113,12 +120,36 @@ table {
  th {
     background: rgb(100, 100, 100);
     color: #fff;
-    text-align: center;
  }
 
  td {
-    text-align: left;
     background: rgb(211, 210, 210);
     color: rgb(0, 0, 0);
  }
 
+ .field-big {
+  width: 25%;
+  white-space: nowrap;
+}
+
+/* Presentacion */
+
+.container_ponencia {
+  display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.countdown {
+  background: black;
+  color: white;
+  text-align: center;
+  border: 5px solid rgb(0, 59, 126);
+  font-size: 500%;
+}
+
+.botones_ponencia{
+  padding-top: 1%;
+  display: flex;
+  justify-content: center;
+}

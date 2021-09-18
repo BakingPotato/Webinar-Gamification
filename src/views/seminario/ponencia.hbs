@@ -2,19 +2,17 @@
     <div class="row">
         <div class="col-md-4 mx-auto">
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                Esta presentando {{usuario.DS_USUARIO}}
+                Esta presentando {{usuario.DS_NOMBRE}}
             </div>
         </div>
     </div>
 </div>
-<div class="container p-4">
-    <div class="row">
-        <div class="col-md-4 mx-auto">
-            <div id="countdown"></div>
-            <button id="parar_btn" class="btn btn-success btn-block" onclick="Parar()">Iniciar</button>
-            <button id="enviar_btn" class="btn btn-success btn-block"  onclick="Enviar()">Enviar</button>
-        </div>
-    </div>
+<div class="container_ponencia">
+            <div id="countdown" class="countdown"></div>
+</div>
+<div class="botones_ponencia">
+        <button id="parar_btn" class="btn btn-success btn-block" onclick="Parar()">Iniciar</button>
+        <button id="enviar_btn" class="btn btn-success btn-block"  onclick="Enviar()">Enviar</button>
 </div>
 
 <script>
