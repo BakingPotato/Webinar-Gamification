@@ -33,30 +33,3 @@
         </div>
     </div>
 </div>
-
-<div class="container_seminarios">
-    {{#each seminarios}}
-    <div class="seminario_card">
-        <div class="card text-center">
-            <div class="card-body">
-                    <h3 class="card-title text-uppercase">
-                        {{DS_NOMBRE}}
-                    </h3>
-                <p class="m-2">{{DS_DESCRIPCION}}</p>
-                <p class="text">
-                    {{FECHA}}
-                </p>
-                <a class="btn btn-secondary" href="perfil/seminario/{{CD_SEMINARIO}}">
-                    Entrar
-                </a>
-            </div>
-        </div>
-    </div>
-    {{else}}
-    <div class="col-md-4 mx-auto">
-        <div class="card card-body text-center">
-            <p>No hay seminarios activos ahora mismo</p>
-        </div>
-    </div>
-    {{/each}}
-</div>

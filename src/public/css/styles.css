@@ -9,9 +9,6 @@ body {
   .nav-link {
     color: #fff !important;
   }
-
-
-
   
 form{
     float:left; /*to clear the floats of inner elements,usefull if you wanna add a border or background image*/
@@ -44,7 +41,7 @@ input{
 /* Contenedores de datos */
 .container_datos {
     float: left;
-    padding-top: 5%;
+    padding-top: 2%;
     width:100%;
     display: flex;
     justify-content: center;
@@ -59,11 +56,12 @@ input{
 }
 
 .container_popup_seminario {
-    padding-top: 5%;
-    float: left;
-    width:100%;
-    display: flex;
-    justify-content: center;
+  padding-top: 2%;
+  padding-left: 5%;
+  float: left;
+  width: 33%;
+  display: flex;
+  justify-content: center;
 }
 
 .container_perfilA {
@@ -74,17 +72,29 @@ input{
 /* DIVS */
 
 .div_nuevo_seminario {
-    float:left;
-    padding-left: 4%;
-    padding-bottom: 3%;
+  width: 33%;
+  display: inline-flex;
+  justify-content: center;
+  padding-top: 2%;
+  padding-bottom: 3%;
 }
 
 .div_nuevo_usuario {
-    float: left;
-    padding-left: 4%;
-    padding-bottom: 3%;
+  width:100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 2%;
+  padding-left: 4%;
+  padding-bottom: 3%;
 }
 
+.div_detalles_seminario {
+  display: flex;
+  float: right;
+  width: 33%;
+  padding-right: 5%;
+  padding-top: 2%;
+}
 
 .seminario_card{
      padding-right: 3%;

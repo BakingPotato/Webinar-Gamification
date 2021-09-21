@@ -10,14 +10,17 @@ router.get('/perfil', isLoggedIn, async (req, res) => {
     if(req.session.usuario.ES_ADMIN == 1){
         res.redirect('/PerfilA')
     }else{
-        let seminarios = await getSeminarios(req);
         let seminario = req.session.usuario.EN_SEMINARIO;
-        res.render('menu/perfil', {seminarios, seminario});
+        res.render('menu/perfil', {seminario});
     }
 });
 
 router.get('/perfil/seminarios', isLoggedIn, async (req, res) => {
     let seminarios = await dbConnect.prototype.getSeminariosParticipado(req);
+    req.session.seminarios = {};
+    for(let i in seminarios){
+        req.session.seminarios[seminarios[i].CD_SEMINARIO] = seminarios[i];
+    }
     let seminario = req.session.usuario.EN_SEMINARIO;
     let soyAdmin = false;
     res.render('menu/seminarios', {seminarios, seminario, soyAdmin});
@@ -55,20 +58,19 @@ router.get('/PerfilA', isLoggedIn, async (req, res) => {
     if(req.session.usuario.ES_ADMIN == 0){
         res.redirect('/perfil')
     }
-    let seminarios = await getSeminarios(req);
     let seminario = req.session.usuario.EN_SEMINARIO;
-    res.render('menu/perfilA', {seminarios, seminario});
+    res.render('menu/perfilA', {seminario});
 });
 
 router.post('/PerfilA/registrarSeminario', isLoggedIn, async (req, res) => {
     const newSeminario = await dbConnect.prototype.registrarSeminario(req);
     if(newSeminario == 10000){ //Si ocurrio un error durante el registro avisamos
         req.flash('message', 'El seminario no pudo registrarse');
-        res.redirect('/PerfilA');
+        res.redirect('/PerfilA/seminarios');
     }else{ //Borramos los seminarios para que se vuelva a comprobar los seminarios activos
         req.session.seminarios = null;
         req.flash('success', 'Seminario registrado correctamente');
-        res.redirect('/PerfilA');
+        res.redirect('/PerfilA/seminarios');
     }
 });
 
@@ -102,7 +104,11 @@ router.get('/PerfilA/usuarios/quitarRol/:id', isLoggedInAndAdmin, async (req, re
 });
 
 router.get('/PerfilA/seminarios', isLoggedInAndAdmin, async (req, res) => {
-    let seminarios = await dbConnect.prototype.getSeminarios(req);
+    let seminarios = await dbConnect.prototype.getSeminariosActivos(req);
+    req.session.seminarios = {};
+    for(let i in seminarios){
+        req.session.seminarios[seminarios[i].CD_SEMINARIO] = seminarios[i];
+    }
     let seminario = req.session.usuario.EN_SEMINARIO;
     let soyAdmin = true;
     let mi_id = req.session.usuario.CD_USUARIO;
@@ -131,7 +137,7 @@ router.get('/PerfilA/usuarios/otorgarRol/:id', isLoggedInAndAdmin, async (req, r
         req.flash('message', 'Lamentablemente, no puedes quitarte el rol a ti mismo.');
         res.redirect('/PerfilA/usuarios');
     }
-    await dbConnect.prototype.añadirRoldeAdmin(req);
+    await dbConnect.prototype.añadirRoldeAdmin(id);
     req.session.usuarios[id].ES_ADMIN = 1;
     req.flash('success', 'El usuario ha sido bendecido con privilegios de admin')
     res.redirect('/PerfilA/usuarios');
@@ -159,7 +165,7 @@ router.post('/PerfilA/registrarU', isLoggedInAndAdmin, async (req, res) => {
 
     if(result.recordset.length > 0){
         req.flash('message', 'El correo '+ req.body.DS_CORREO +' ya esta en uso');
-        res.redirect('/PerfilA');
+        res.redirect('/PerfilA/usuarios');
     }else{
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -182,12 +188,13 @@ router.post('/PerfilA/registrarU', isLoggedInAndAdmin, async (req, res) => {
                 if (error) {
                   console.log(error);
                   req.flash('message', 'Ocurrió un error en el envío, asegurese de que los datos de su correo son correctos y que este tiene activado acceso de aplicaciones poco seguras');
-                  res.redirect('/PerfilA');
+                  res.redirect('/PerfilA/usuarios');
                 } else {
                 req.flash('success', 'El usuario fue registrado con éxito');
                   console.log('Email enviado: ' + info.response);
                   await dbConnect.prototype.registrarUsuario(req);
-                  res.redirect('/PerfilA');
+                  req.session.usuarios = null;
+                  res.redirect('/PerfilA/usuarios');
                 }
             });
     }
@@ -222,21 +229,6 @@ function sendEmail(correoDestino, correoOrigen, pass, seminario){
                 res.redirect('/PerfilA');
             }
         });
-}
-
-async function getSeminarios(req){
-    let seminarios = {};
-    if(!req.session.seminarios){
-        seminarios = await dbConnect.prototype.getSeminariosActivos(req);
-        req.session.seminarios = {};
-        for(let i in seminarios){
-            req.session.seminarios[seminarios[i].CD_SEMINARIO] = seminarios[i];
-        }
-    }
-    else{
-        seminarios = req.session.seminarios;
-    }
-    return seminarios;
 }
 
 async function getUsuarios(req){
