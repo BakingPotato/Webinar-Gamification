@@ -2,9 +2,13 @@
     <div class="row">
         <table class="default">
             <caption>Usuarios de interAppctua</caption>
-            <tr><th>Nombre</th><th>Nombre twitter</th><th class="field-big">Descripción</th><th>Puntos Ponencia</th><th>Puntos Preguntas</th><th>Rol</th><th>Permisos</th></tr>
+            <tr><th>Nombre</th>
+            <th class="field-big">Correo</th>
+            <th>Nombre twitter</th><th class="field-big">Descripción</th><th>Puntos Ponencia</th><th>Puntos Preguntas</th><th>Rol</th><th></th></tr>
         {{#each usuarios}}
-            <tr><td>{{DS_NOMBRE}}</td><td>{{DS_TWITTER}}</td><td class="field-big">{{DS_DESCRIPCION}}</td><td>{{NM_PUNTOS}}</td><td>{{NM_PUNTOS_CUESTION}}</td>
+            <tr><td>{{DS_NOMBRE}}</td>
+                <td class="field-big">{{DS_CORREO}}</td>
+            <td>{{DS_TWITTER}}</td><td class="field-big">{{DS_DESCRIPCION}}</td><td>{{NM_PUNTOS}}</td><td>{{NM_PUNTOS_CUESTION}}</td>
             {{#if ES_ADMIN }}
                 <td>Administrador</td>
                 <td><a class="btn btn-danger btn-block" href="usuarios/quitarRol/{{CD_USUARIO}}">
@@ -37,14 +41,14 @@
         </div>
         <div class="card-body">
             <form action="/PerfilA/registrarU" method="POST">
-            <b>Correo que enviara las invitaciones:</b> 
+            {{!-- <b>Correo que enviara las invitaciones:</b> 
             <div class="form-group">
                 Correo: <input type="text" maxlength="50" name="email" value={{user.DS_CORREO}} class="form-control" required>
             </div>
             <div class="form-group">
                 Contraseña: <input type="password" maxlength="50" name="email_pass" placeholder="Contraseña" class="form-control" required>
             </div>
-            <br>
+            <br> --}}
             <b>Datos del nuevo usuario:</b>
             <div class="form-group">
                 Correo: <input type="text" maxlength="50" name="DS_CORREO" placeholder="correo@hmail.com" class="form-control" required>

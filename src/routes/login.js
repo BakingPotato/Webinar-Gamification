@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const passport = require('passport');
-const { isLoggedIn, isAlreadyLogged} = require('../lib/auth');
+const { isLoggedIn, isAlreadyLogged, isAlreadyLoggedAlter } = require('../lib/auth');
 
 router.get('/registro/:id', (req, res)=> {
     const {id} = req.params;

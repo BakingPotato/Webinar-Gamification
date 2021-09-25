@@ -25,6 +25,21 @@ module.exports = {
             req.flash('success', 'Cierre sesión primero');
              return res.redirect('/perfil');
         }
+    },
+
+    isAlreadyLoggedAlter (req, res, next) {
+        if (!req.isAuthenticated()) {
+            return next();
+        }else{
+            req.session.seminario = null;
+            req.session.seminarios = null;
+            req.session.usuario = null;
+            req.session.usuarios = null;
+            req.logOut();
+            res.redirect('inicio');
+            req.flash('success', 'Se cerro su sesión');
+            return res.redirect('inicio');
+        }
     }
 
 };

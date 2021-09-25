@@ -98,13 +98,13 @@ router.get('/PerfilA/usuarios/quitarRol/:id', isLoggedInAndAdmin, async (req, re
         res.redirect('/PerfilA/usuarios');
     }
     await dbConnect.prototype.quitarRoldeAdmin(id);
-    req.session.usuarios[id].ES_ADMIN = 0;
+    req.session.usuarios = null;
     req.flash('success', 'El usuario ha sido despojado de sus privilegios de admin')
     res.redirect('/PerfilA/usuarios');
 });
 
 router.get('/PerfilA/seminarios', isLoggedInAndAdmin, async (req, res) => {
-    let seminarios = await dbConnect.prototype.getSeminariosActivos(req);
+    let seminarios = await dbConnect.prototype.getSeminarios(req);
     req.session.seminarios = {};
     for(let i in seminarios){
         req.session.seminarios[seminarios[i].CD_SEMINARIO] = seminarios[i];
@@ -138,21 +138,21 @@ router.get('/PerfilA/usuarios/otorgarRol/:id', isLoggedInAndAdmin, async (req, r
         res.redirect('/PerfilA/usuarios');
     }
     await dbConnect.prototype.añadirRoldeAdmin(id);
-    req.session.usuarios[id].ES_ADMIN = 1;
+    req.session.usuarios = null;
     req.flash('success', 'El usuario ha sido bendecido con privilegios de admin')
     res.redirect('/PerfilA/usuarios');
 });
 
 
 router.post('/PerfilA/seminario/invitar', isLoggedInAndAdmin, async (req, res) => {
-    const { CD_SEMINARIO, email, email_pass}  = req.body;
+    const { CD_SEMINARIO}  = req.body;
 
     if( req.body["DS_CORREO[]"][0].length == 1){
-        sendEmail(req.body["DS_CORREO[]"], email, email_pass, CD_SEMINARIO);
+        sendEmail(req.body["DS_CORREO[]"], CD_SEMINARIO, req, res);
     }else{
         for(correo of req.body["DS_CORREO[]"]){
             if(correo && correo != ""){
-                sendEmail(correo, email, email_pass, CD_SEMINARIO);
+                sendEmail(correo, CD_SEMINARIO, req, res);
             }
         }
     }
@@ -170,17 +170,17 @@ router.post('/PerfilA/registrarU', isLoggedInAndAdmin, async (req, res) => {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: req.body.email,
-                pass: req.body.email_pass
+                user: 'ludonariotfg@gmail.com',
+                pass: 'TFGFinal20-21'
             }
             });
         
-            var mensaje = "Hola, le informamos que ha sido registrado en la plataforma de ludonario"
+            var mensaje = "Ha sido registrado en la plataforma de interAppctua"
             var mailOptions = {
-                from: req.body.email,
+                from: 'ludonariotfg@gmail.com',
                 to: req.body.DS_CORREO,
                 subject: mensaje,
-                html: '<p>Hola, le informamos que ha sido registrado en la plataforma de ludonario. Para iniciar sesión introduzca este correo y la constraseña: ' + desencrypted + '</p>'
+                html: '<p>Hola, le informamos que ha sido registrado en la plataforma de interAppctua. Para iniciar sesión introduzca este correo y la constraseña: ' + desencrypted + '</p>'
     
             };
         
@@ -201,18 +201,18 @@ router.post('/PerfilA/registrarU', isLoggedInAndAdmin, async (req, res) => {
 });
 
 
-function sendEmail(correoDestino, correoOrigen, pass, seminario){
+function sendEmail(correoDestino, seminario, req, res){
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: correoOrigen,
-            pass: pass
+            user: 'ludonariotfg@gmail.com',
+            pass: 'TFGFinal20-21'
         }
         });
     
-        var mensaje = "Hola, este es un correo para inscribirle en el futuro seminario de la URJC."
+        var mensaje = "Incripción en futuro seminario de la URJC."
         var mailOptions = {
-            from: correoOrigen,
+            from: 'ludonariotfg@gmail.com',
             to: correoDestino,
             subject: mensaje,
             html: '<p>Hola, este es un correo para inscribirle en el futuro seminario de la URJC. Cree una cuenta <a href="http://localhost:9001/inicio/' + seminario + '">aquí</a> o incie sesión si ya tiene una y se le registrara en el seminario</p>'
@@ -222,11 +222,11 @@ function sendEmail(correoDestino, correoOrigen, pass, seminario){
             if (error) {
                 console.log(error);
                 req.flash('message', 'Ocurrió un error en el envío, asegurese de que los datos de su correo son correctos y que este tiene activado acceso de aplicaciones poco seguras');
-                res.redirect('/PerfilA');
+                res.redirect('/PerfilA/seminarios');
             } else {
                 console.log('Email enviado: ' + info.response);
                 req.flash('success', 'La invitación se envio con éxito al correo o correos seleccionado')
-                res.redirect('/PerfilA');
+                res.redirect('/PerfilA/seminarios');
             }
         });
 }
@@ -236,12 +236,14 @@ async function getUsuarios(req){
     if(!req.session.usuarios){
         usuarios = await dbConnect.prototype.getUsuarios();
         req.session.usuarios = {};
+        req.session.usuariosORD = {};
         for(let i in usuarios){
             req.session.usuarios[usuarios[i].CD_USUARIO] = usuarios[i];
+            req.session.usuariosORD[i] = usuarios[i];
         }
     }
     else{
-        usuarios = req.session.usuarios;
+        usuarios = req.session.usuariosORD;
     }
     return usuarios;
 }
