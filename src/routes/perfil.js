@@ -28,7 +28,6 @@ router.get('/perfil/seminarios', isLoggedIn, async (req, res) => {
 
 router.get('/perfil/seminario/:id', isLoggedIn, async (req, res) => {
     const { id }  = req.params;
-    await dbConnect.prototype.registrarseEnSeminario(req, id);
     req.session.seminario = null;
     req.session.seminario = req.session.seminarios[id];
     req.session.usuario.EN_SEMINARIO = true;
@@ -75,16 +74,25 @@ router.post('/PerfilA/registrarSeminario', isLoggedIn, async (req, res) => {
 });
 
 router.get('/PerfilA', isLoggedInAndAdmin, async (req, res) => {
-    let seminarios = await getSeminarios(req);
+    let seminarios = await getSeminarios();
     let seminario = req.session.usuario.EN_SEMINARIO;
     res.render('menu/perfilA', {seminarios, seminario});
 });
 
 router.get('/PerfilA/usuarios', isLoggedInAndAdmin, async (req, res) => {
     let usuarios = await getUsuarios(req);
+    let seminarios = await dbConnect.prototype.getSeminariosActuales();
     let seminario = req.session.usuario.EN_SEMINARIO;
-    res.render('menu/usuarios', {usuarios, seminario});
+    res.render('menu/usuarios', {usuarios, seminario, seminarios});
 });
+
+router.post('/PerfilA/usuarios/invitar/:id', isLoggedInAndAdmin, async (req, res) => {
+    const { id }  = req.params;
+    await dbConnect.prototype.registrarseEnSeminario(req.body.DS_CORREO, id);
+    req.flash('success', 'Se registro al usuario en el seminario correctamente')
+    res.redirect('/PerfilA/usuarios');
+});
+
 
 router.get('/PerfilA/usuarios/actualizar', isLoggedInAndAdmin, async (req, res) => {
     req.session.usuarios = null; //Reiniciamos la lista local de usuarios para volver a llenarla con lo que haya en la base de datos
@@ -104,7 +112,7 @@ router.get('/PerfilA/usuarios/quitarRol/:id', isLoggedInAndAdmin, async (req, re
 });
 
 router.get('/PerfilA/seminarios', isLoggedInAndAdmin, async (req, res) => {
-    let seminarios = await dbConnect.prototype.getSeminarios(req);
+    let seminarios = await dbConnect.prototype.getSeminarios();
     req.session.seminarios = {};
     for(let i in seminarios){
         req.session.seminarios[seminarios[i].CD_SEMINARIO] = seminarios[i];
@@ -124,7 +132,7 @@ router.post('/PerfilA/actualizarSeminario', isLoggedInAndAdmin, async (req, res)
 
 router.get('/PerfilA/seminario/administrador/:id', isLoggedInAndAdmin, async (req, res) => {
     const { id }  = req.params;
-    await dbConnect.prototype.registrarseEnSeminario(req, id);
+    await dbConnect.prototype.registrarseEnSeminario(req.session.usuario.DS_CORREO, id);
     req.session.seminario = null;
     req.session.seminario = req.session.seminarios[id];
     req.session.usuario.EN_SEMINARIO = true;
@@ -161,7 +169,7 @@ router.post('/PerfilA/seminario/invitar', isLoggedInAndAdmin, async (req, res) =
 router.post('/PerfilA/registrarU', isLoggedInAndAdmin, async (req, res) => {
     let desencrypted = req.body.DS_PASS;
     req.body.DS_PASS = await helpers.encryptPassword(req.body.DS_PASS);
-    let result = await dbConnect.prototype.comprobarCorreo(req);
+    let result = await dbConnect.prototype.comprobarCorreo(req.body.DS_CORREO);
 
     if(result.recordset.length > 0){
         req.flash('message', 'El correo '+ req.body.DS_CORREO +' ya esta en uso');
@@ -201,34 +209,42 @@ router.post('/PerfilA/registrarU', isLoggedInAndAdmin, async (req, res) => {
 });
 
 
-function sendEmail(correoDestino, seminario, req, res){
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'ludonariotfg@gmail.com',
-            pass: 'TFGFinal20-21'
-        }
-        });
-    
-        var mensaje = "Incripción en futuro seminario de la URJC."
-        var mailOptions = {
-            from: 'ludonariotfg@gmail.com',
-            to: correoDestino,
-            subject: mensaje,
-            html: '<p>Hola, este es un correo para inscribirle en el futuro seminario de la URJC. Cree una cuenta <a href="http://localhost:9001/inicio/' + seminario + '">aquí</a> o incie sesión si ya tiene una y se le registrara en el seminario</p>'
-        };
-    
-        transporter.sendMail(mailOptions, function(error, info){
-            if (error) {
-                console.log(error);
-                req.flash('message', 'Ocurrió un error en el envío, asegurese de que los datos de su correo son correctos y que este tiene activado acceso de aplicaciones poco seguras');
-                res.redirect('/PerfilA/seminarios');
-            } else {
-                console.log('Email enviado: ' + info.response);
-                req.flash('success', 'La invitación se envio con éxito al correo o correos seleccionado')
-                res.redirect('/PerfilA/seminarios');
+async function sendEmail(correoDestino, seminario, req, res){
+    let result = await dbConnect.prototype.comprobarCorreo(correoDestino);
+
+    if(result.recordsets.length > 0){
+        await dbConnect.prototype.registrarseEnSeminario(correoDestino, seminario);
+        req.flash('success', 'Se registro al usuario en el seminario correctamente')
+        res.redirect('/PerfilA/seminarios');
+    }else{
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'ludonariotfg@gmail.com',
+                pass: 'TFGFinal20-21'
             }
-        });
+            });
+        
+            var mensaje = "Incripción en futuro seminario de la URJC."
+            var mailOptions = {
+                from: 'ludonariotfg@gmail.com',
+                to: correoDestino,
+                subject: mensaje,
+                html: '<p>Hola, este es un correo para inscribirle en el futuro seminario de la URJC. Cree una cuenta <a href="http://localhost:9001/inicio/' + seminario + '">aquí</a> o incie sesión si ya tiene una y se le registrara en el seminario</p>'
+            };
+        
+            transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                    console.log(error);
+                    req.flash('message', 'Ocurrió un error en el envío, asegurese de que los datos de su correo son correctos y que este tiene activado acceso de aplicaciones poco seguras');
+                    res.redirect('/PerfilA/seminarios');
+                } else {
+                    console.log('Email enviado: ' + info.response);
+                    req.flash('success', 'La invitación se envio con éxito al correo o correos seleccionado')
+                    res.redirect('/PerfilA/seminarios');
+                }
+            });
+    }
 }
 
 async function getUsuarios(req){

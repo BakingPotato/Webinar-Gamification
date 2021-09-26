@@ -48,7 +48,7 @@ passport.use('local.inicio_alter', new LocalStrategy({
         if(validPass){
             user.DS_PASS = password;
             req.session.usuario = user;
-            await dbConnect.prototype.registrarseEnSeminario(username, password, req.params.id);
+            await dbConnect.prototype.registrarseEnSeminario(username, req.params.id);
             return done(null, user, req.flash('success', 'Bienvenido ' + user.DS_NOMBRE));
         }else{
             return done(null, false, req.flash('message', 'Contraseña incorrecta'))
@@ -127,7 +127,7 @@ passport.use('local.registro_alter', new LocalStrategy({
         newUser.CD_USUARIO = result.returnValue
         newUser.DS_PASS = password;
         req.session.usuario = newUser;
-        await dbConnect.prototype.registrarseEnSeminario(username, password, req.params.id);
+        await dbConnect.prototype.registrarseEnSeminario(username, req.params.id);
         return done(null, newUser, req.flash('success', 'Bienvenido ' + newUser.DS_NOMBRE + ', se le registro en el seminario con exito')); 
     }
 

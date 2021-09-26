@@ -5,7 +5,7 @@ const helpers = require('../lib/helpers');
 class databaseConnect extends IDriver {
 
     //BLOQUE Usuarios
-    async getSeminarios(req){
+    async getSeminarios(){
         const request = new pool.Request();
         const result = await request
         .execute('OBTENER_SEMINARIOS')
@@ -17,6 +17,13 @@ class databaseConnect extends IDriver {
         const result = await request
         .input("CD_USUARIO", pool.Int, req.session.usuario.CD_USUARIO)
         .execute('OBTENER_SEMINARIOS_ACTIVOS')
+        return result.recordset;
+    }
+
+    async getSeminariosActuales(){
+        const request = new pool.Request();
+        const result = await request
+        .execute('OBTENER_SEMINARIOS_ACTUALES')
         return result.recordset;
     }
 
@@ -60,7 +67,7 @@ class databaseConnect extends IDriver {
         return result.recordset;
     }
 
-    async registrarseEnSeminario(username, pass, id){
+    async registrarseEnSeminario(username, id){
         const request = new pool.Request();
         const result = await request
         .input("DS_CORREO", pool.VarChar(50), username)
@@ -86,10 +93,10 @@ class databaseConnect extends IDriver {
     return result.returnValue;
     }
 
-    async comprobarCorreo(req){
+    async comprobarCorreo(correo){
         const request = new pool.Request();
         const result = await request
-            .input("DS_CORREO", pool.VarChar(50), req.body.DS_CORREO)
+            .input("DS_CORREO", pool.VarChar(50), correo)
             .execute('OBTENER_USUARIO_POR_LOGIN')
         return result;
     }

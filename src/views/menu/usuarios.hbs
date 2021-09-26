@@ -4,7 +4,7 @@
             <caption>Usuarios de interAppctua</caption>
             <tr><th>Nombre</th>
             <th class="field-big">Correo</th>
-            <th>Nombre twitter</th><th class="field-big">Descripción</th><th>Puntos Ponencia</th><th>Puntos Preguntas</th><th>Rol</th><th></th></tr>
+            <th>Nombre twitter</th><th class="field-big">Descripción</th><th>Puntos Ponencia</th><th>Puntos Preguntas</th><th>Rol</th><th></th><th></th></tr>
         {{#each usuarios}}
             <tr><td>{{DS_NOMBRE}}</td>
                 <td class="field-big">{{DS_CORREO}}</td>
@@ -20,6 +20,9 @@
                     Otorgarle Admin
                 </a></td>
             {{/if}}
+            <td><a id="pop_register_user" class="btn btn-success btn-block" onclick="abrirTablaSeminarios('{{DS_CORREO}}')">
+                Invitar
+            </a></td>
             </tr>
         {{/each}}
         </table>
@@ -31,6 +34,22 @@
         <a class="btn btn-secondary" href="usuarios/actualizar">
             Actualizar
         </a>
+    </div>
+</div>
+
+<div class="container p-4" id="seminarios_actuales">
+    <div class="row">
+        <table class="default">
+            <caption>Seminarios de interAppctua</caption>
+            <tr><th>Nombre</th><th class="field-big">Descripción</th><th>Fecha</th><th></th></tr>
+        {{#each seminarios}}
+            <tr><td>{{DS_NOMBRE}}</td><td class="field-big">{{DS_DESCRIPCION}}</td><td>{{FECHA}}</td>
+            <td><a id="pop_register_user" class="btn btn-success btn-block" onclick="Invitar({{CD_SEMINARIO}})">
+                Invitar
+            </a></td>
+            </tr>
+        {{/each}}
+        </table>
     </div>
 </div>
 
@@ -66,3 +85,27 @@
         </div>
     </div>
 </div>
+
+<script>
+    let correo = "";
+    document.getElementById("seminarios_actuales").style.display = "none";
+
+    function abrirTablaSeminarios(correo_actual) {
+        document.getElementById("seminarios_actuales").style.display = "block";
+        correo = correo_actual
+    }
+
+    function Invitar(id){
+        const form = document.createElement('form');
+        form.method = "POST";
+        form.action = "/PerfilA/usuarios/invitar/"+ id;
+        const field = document.createElement('input');
+        field.type = 'hidden';
+        field.name = 'DS_CORREO';
+        field.value = correo;
+
+        form.appendChild(field);
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
