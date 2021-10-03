@@ -83,7 +83,7 @@ class databaseConnect extends IDriver {
         .input("CD_USUARIO", pool.Int, req.session.usuario.CD_USUARIO)
         .input("DS_CORREO", pool.VarChar(50), req.body.DS_CORREO ? req.body.DS_CORREO : null)
         .input("DS_NOMBRE", pool.VarChar(50),  req.body.DS_NOMBRE ?  req.body.DS_NOMBRE : null)
-        .input("DS_DESCRIPCION", pool.VarChar(250),  req.body.DS_DESCRIPCION ? req.body.DS_DESCRIPCION : null)
+        .input("DS_DESCRIPCION", pool.VarChar(700),  req.body.DS_DESCRIPCION ? req.body.DS_DESCRIPCION : null)
         .input("DS_PASS", pool.VarChar(255), pass)
         .input("DS_TWITTER", pool.VarChar(50),  req.body.DS_TWITTER ?  req.body.DS_TWITTER : null)
         .execute('ACTUALIZAR_USUARIO')
@@ -169,7 +169,7 @@ class databaseConnect extends IDriver {
         .input("CD_USUARIO", pool.Int, req.session.usuario.CD_USUARIO)
         .input("DS_NOMBRE", pool.VarChar(50), req.body.DS_NOMBRE)
         .input("FECHA", pool.Date,  req.body.FECHA)
-        .input("DS_DESCRIPCION", pool.VarChar(250),  req.body.DS_DESCRIPCION)
+        .input("DS_DESCRIPCION", pool.VarChar(700),  req.body.DS_DESCRIPCION)
         .input("TIEMPO_PONENCIA", pool.Int,  req.body.TIEMPO_PONENCIA)
         .input("DS_HASHTAG", pool.VarChar(150), null)
         .execute('REGISTRAR_SEMINARIO')
@@ -182,7 +182,7 @@ class databaseConnect extends IDriver {
         const result = await request
         .input("CD_SEMINARIO", pool.Int, req.body.CD_SEMINARIO)
         .input("DS_NOMBRE", pool.VarChar(50),  req.body.DS_NOMBRE ?  req.body.DS_NOMBRE : null)
-        .input("DS_DESCRIPCION", pool.VarChar(250),  req.body.DS_DESCRIPCION ? req.body.DS_DESCRIPCION : null)
+        .input("DS_DESCRIPCION", pool.VarChar(700),  req.body.DS_DESCRIPCION ? req.body.DS_DESCRIPCION : null)
         .input("FECHA", pool.Date,  fecha)
         .input("TIEMPO_PONENCIA", pool.Int,  req.body.TIEMPO_PONENCIA)
         .execute('ACTUALIZAR_SEMINARIO')
@@ -215,7 +215,7 @@ class databaseConnect extends IDriver {
         .input("CD_ORIGEN", pool.Int, req.session.usuario.CD_USUARIO)
         .input("CD_DIRIGIDO", pool.Int, req.session.seminario.CD_DIRIGIDO)
         .input("CD_SEMINARIO", pool.Int,  req.session.seminario.CD_SEMINARIO)
-        .input("DS_CUESTION", pool.VarChar(250), req.body.DS_CUESTION)
+        .input("DS_CUESTION", pool.VarChar(500), req.body.DS_CUESTION)
         .execute('REGISTRAR_PREGUNTA')
         return result.returnValue;
     }

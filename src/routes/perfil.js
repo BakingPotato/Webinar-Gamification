@@ -188,8 +188,9 @@ router.post('/PerfilA/registrarU', isLoggedInAndAdmin, async (req, res) => {
                 from: 'ludonariotfg@gmail.com',
                 to: req.body.DS_CORREO,
                 subject: mensaje,
-                html: '<p>Hola, le informamos que ha sido registrado en la plataforma de interAppctua. Para iniciar sesión introduzca este correo y la constraseña: ' + desencrypted + '</p>'
-    
+                html: '<p>Estimado/a prodesor/a.<br><br>Se le ha creado un usuario en la plataforma educativa InterAPPctúa de la Universidad Rey Juan Carlos.<br><br> Le informamos que sus datos de acceso son:<br><br>'
+                +'Nombre de usuario: ' + req.body.DS_CORREO + '<br>Contraseña: ' + desencrypted + '<br><br>Le recomendamos que modifique en la zona de su perfil la contraseña la primera vez que acceda.'
+                +'<br><br>Atentamente ' + req.session.usuario.DS_NOMBRE +'</p>'   
             };
         
             transporter.sendMail(mailOptions, async function(error, info){

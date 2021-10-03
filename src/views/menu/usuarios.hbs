@@ -3,11 +3,11 @@
         <table class="default">
             <caption>Usuarios de interAppctua</caption>
             <tr><th>Nombre</th>
-            <th class="field-big">Correo</th>
+            <th class="field-medium">Correo</th>
             <th>Nombre twitter</th><th class="field-big">Descripción</th><th>Puntos Ponencia</th><th>Puntos Preguntas</th><th>Rol</th><th></th><th></th></tr>
         {{#each usuarios}}
             <tr><td>{{DS_NOMBRE}}</td>
-                <td class="field-big">{{DS_CORREO}}</td>
+                <td class="field-medium">{{DS_CORREO}}</td>
             <td>{{DS_TWITTER}}</td><td class="field-big">{{DS_DESCRIPCION}}</td><td>{{NM_PUNTOS}}</td><td>{{NM_PUNTOS_CUESTION}}</td>
             {{#if ES_ADMIN }}
                 <td>Administrador</td>
@@ -30,9 +30,15 @@
 </div>
 
 <div class="container p-4">
-    <div class="row">
+    <div class="row btn-aux">
         <a class="btn btn-secondary" href="usuarios/actualizar">
             Actualizar
+        </a>
+    </div>
+
+    <div class="row btn-aux">
+        <a class="btn btn-secondary" onclick="abrirNuevoUsuario()">
+            Nuevo Usuario
         </a>
     </div>
 </div>
@@ -53,7 +59,7 @@
     </div>
 </div>
 
-<div class="div_nuevo_usuario">
+<div class="div_nuevo_usuario" id="div_nuevo_usuario">
     <div class="card text-center">
         <div class="card-header">
             <h3>Nuevo usuario</h3>
@@ -92,6 +98,11 @@
 
     function abrirTablaSeminarios(correo_actual) {
         document.getElementById("seminarios_actuales").style.display = "block";
+        correo = correo_actual
+    }
+
+    function abrirNuevoUsuario() {
+        document.getElementById("div_nuevo_usuario").style.display = "flex";
         correo = correo_actual
     }
 
