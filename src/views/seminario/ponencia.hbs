@@ -22,7 +22,7 @@
     let _day = _hour * 24;
 
     let now = new Date('01/01/2100 00:00:00' );
-    let end = now.getTime() + (_second * 60 );//* {{tiempo}});
+    let end = now.getTime() + (_second * 60 * {{tiempo}});
 
     let timer;
     let iniciar = false;
@@ -46,9 +46,9 @@
                 puntuacion += 0.01;
                 document.getElementById('countdown').innerHTML ='';
                 if(seconds < 10)
-                    document.getElementById('countdown').innerHTML = '0' + minutes + '::0' + seconds;
+                    document.getElementById('countdown').innerHTML = '0' + minutes + ':0' + seconds;
                 else
-                    document.getElementById('countdown').innerHTML = '0' + minutes + '::' + seconds;
+                    document.getElementById('countdown').innerHTML = '0' + minutes + ':' + seconds;
             }
         }
     }
@@ -74,7 +74,7 @@
             const field = document.createElement('input');
             field.type = 'hidden';
             field.name = 'puntuacion';
-            field.value = Math.floor(puntuacion * 1.5);
+            field.value = Math.ceil(puntuacion * 2);
 
             form.appendChild(field);
             document.body.appendChild(form);

@@ -213,7 +213,7 @@ router.post('/PerfilA/registrarU', isLoggedInAndAdmin, async (req, res) => {
 async function sendEmail(correoDestino, seminario, req, res){
     let result = await dbConnect.prototype.comprobarCorreo(correoDestino);
 
-    if(result.recordsets.length > 0){
+    if(result.recordsets[0].length > 0){
         await dbConnect.prototype.registrarseEnSeminario(correoDestino, seminario);
         req.flash('success', 'Se registro al usuario en el seminario correctamente')
         res.redirect('/PerfilA/seminarios');
@@ -231,7 +231,7 @@ async function sendEmail(correoDestino, seminario, req, res){
                 from: 'ludonariotfg@gmail.com',
                 to: correoDestino,
                 subject: mensaje,
-                html: '<p>Hola, este es un correo para inscribirle en el futuro seminario de la URJC. Cree una cuenta <a href="http://localhost:9001/inicio/' + seminario + '">aquí</a> o incie sesión si ya tiene una y se le registrara en el seminario</p>'
+                html: '<p>Hola, este es un correo para inscribirle en el futuro seminario de la URJC.<br><br>Registre una cuenta <a href="https://interappctua.azurewebsites.net/registro/' + seminario + '">aquí</a> o incie sesión si ya tiene una y se le registrara en el seminario</p>'
             };
         
             transporter.sendMail(mailOptions, function(error, info){

@@ -21,3 +21,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Arreglada mala ordenación de la tabla usuarios al no actualizar
+
+## [1.0.2] - 03-10-2021
+### Added
+
+### Changed
+
+### Fixed
+- Arreglado temporizador de ponencia, ahora muestra el tiempo elegido al crearla
+- Arreglado invitaciones a un seminario, ahora lleva a la url de azure
