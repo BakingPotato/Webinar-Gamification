@@ -2,16 +2,16 @@
     <div class="row">
         <table class="default">
             <caption>Preguntas del seminario</caption>
-            <tr><th class="field-big">Pregunta</th><th>De</th><th>Para</th><th>Puntos</th><th>Votos</th></tr>
+            <tr><th class="field-big">Pregunta</th><th>De</th><th>Para</th><th>Total de likes</th><th>&#128154;</th></tr>
         {{#each preguntas}}
             <tr><td class="field-big">{{DS_CUESTION}}</td><td>{{DS_ORIGEN}}</td><td>{{DS_DESTINO}}</td><td>{{NM_VOTOS}}</td>
             {{#if VOTADO }}
                 <td><a class="btn btn-danger btn-block" onclick="abrirDesvotar({{CD_CUESTION}}, '{{DS_CUESTION}}')">
-                    Desvotar
+                    Quitar Like
                 </a></td>
             {{else}}
                 <td><a class="btn btn-success btn-block" href="preguntas/votar/{{CD_CUESTION}}">
-                    Votar
+                    Like
                 </a></td>
             {{/if}}
             </tr>
@@ -33,14 +33,14 @@
         <div class="col-md-4 mx-auto">
             <div class="card text-center" id="desvotar">
                 <div class="card-header">
-                    <h3>¿Estas segur@ de querer quitarle tu voto a esta pregunta?</h3>
+                    <h3>¿Estas segur@ de querer quitarle tu Like a esta pregunta?</h3>
                 </div>
                 <div class="card-body" >
                     <form action="/seminario/preguntas/desvotar" id="desvotarForm" class="form-container">
                         <p class="m-2" id="text_cuestion"></div>
                         <input type="number" id="pregunta_desvotada" name="CD_CUESTION" class="form-control">
                     <div class="form-group">
-                        <button type="submit" id="btn_a" class="btn btn-success btn-block">Desvotar</button>
+                        <button type="submit" id="btn_a" class="btn btn-success btn-block">Quitar Like</button>
                     </div>
                     <div class="form-group">
                         <button id="btn_b" class="btn btn-danger btn-block" onclick="cerrarDesvotar()">Cancelar</button>

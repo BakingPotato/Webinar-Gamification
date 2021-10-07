@@ -22,11 +22,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Arreglada mala ordenación de la tabla usuarios al no actualizar
 
-## [1.0.2] - 03-10-2021
-### Added
-
-### Changed
-
+## [1.0.2] - 05-10-2021
 ### Fixed
 - Arreglado temporizador de ponencia, ahora muestra el tiempo elegido al crearla
 - Arreglado invitaciones a un seminario, ahora lleva a la url de azure
+
+## [1.1.0] - 05-10-2021
+### Added
+- Añadido link al correo de bienvenida
+  
+### Changed
+- Al acceder a la app los usuarios llegan primero a la lista de espera
+- Cambiado nomenclatura de los votos a las preguntas, ahora son likes
+- Cambiado  el campo votos en preguntas por un emoji de un corazón verde
+- Cambiado texto al pedir ser ponente para que quede mejor redactado
+  
+### Fixed
+- Arreglado que pedir ponente se siguiera pudiendo pulsar al acceder a la lista
+- Arreglado que no se sumaran los puntos al ponente tras su ponencia

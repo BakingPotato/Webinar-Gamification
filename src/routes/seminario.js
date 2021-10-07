@@ -67,7 +67,14 @@ router.get('/seminario/usuarios', isLoggedIn, async (req, res) => {
         let listaEspera = await getListaEspera(req);
         res.render('seminario/usuario', {usuarios, seminario, soyAdmin, soyPonente, listaEspera});
     } else{
-        res.render('seminario/usuario', {usuarios, seminario, soyAdmin, soyPonente});
+        let pidioPonente = false;
+        if(!req.session.usuario.PIDIO_PONENTE){
+            pidioPonente = await  dbConnect.prototype.getEnListaDeEspera(req);
+            req.session.usuario.PIDIO_PONENTE = pidioPonente;
+        }else{
+            pidioPonente = req.session.usuario.PIDIO_PONENTE;
+        }
+        res.render('seminario/usuario', {usuarios, seminario, soyAdmin, pidioPonente, soyPonente});
     }
 });
 
@@ -87,7 +94,8 @@ router.get('/seminario/usuarios/otorgarPonente/:id', isLoggedInAndAdmin, async (
 
 router.get('/seminario/usuarios/pedirPonente', isLoggedIn, async (req, res) => {
     await dbConnect.prototype.registrarEnListaPonentes(req);
-    req.flash('success', 'Enhorabuena, estas registrado en lista, espere a que el admin le de ponente');
+    req.session.usuario.PIDIO_PONENTE = true;
+    req.flash('success', 'Enhorabuena, has sido registrado en la lista, espere a que el administrador le de su turno de palabra');
     res.redirect('/seminario/usuarios');
 });
 
@@ -101,8 +109,8 @@ router.get('/seminario/usuarios/ponencia/:id', isLoggedInAndAdmin, async (req, r
 
 router.post('/seminario/usuarios/ponencia/:id', isLoggedInAndAdmin, async (req, res) => {
     const { id }  = req.params;
-    await dbConnect.prototype.votarPonente(req);
-    await dbConnect.prototype.añadirRoldePonente(req);
+   await dbConnect.prototype.añadirRoldePonente(req);
+    await dbConnect.prototype.votarPonentePonencia(req);
     req.session.seminario.usuarios[id].ES_PONENTE = 1;
     req.session.seminario.ponentes = null;
     req.flash('success', 'La ponencia ha acabado')

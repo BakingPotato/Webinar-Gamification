@@ -58,6 +58,15 @@ class databaseConnect extends IDriver {
         return result.recordset;
     }
 
+    async getEnListaDeEspera(req){
+        const request = new pool.Request();
+        const result = await request
+        .input("CD_SEMINARIO", pool.Int, req.session.seminario.CD_SEMINARIO)
+        .input("CD_USUARIO", pool.Int, req.session.usuario.CD_USUARIO)
+        .execute('OBTENER_EN_LISTA_ESPERA')
+        return result.returnValue;
+    }
+
 
     async getUsuariosSeminario(req){
         const request = new pool.Request();
@@ -160,6 +169,15 @@ class databaseConnect extends IDriver {
         return result.returnValue;
     }
 
+    async votarPonentePonencia(req){
+        const request = new pool.Request();
+        const result = await request
+        .input("CD_SEMINARIO", pool.Int,  req.session.seminario.CD_SEMINARIO)
+        .input("CD_DESTINO", pool.Int, parseInt(req.params.id))
+        .input("NM_PUNTOS", pool.Int, req.body.puntuacion)
+        .execute('SUMAR_VOTOS_A_USUARIO_PONENCIA')
+        return result.returnValue;
+    }
 
     //BLOQUE Seminarios
 

@@ -38,7 +38,7 @@ router.get('/inicio', isAlreadyLogged, (req, res) => {
 
 router.post('/inicio', (req, res, next) => {
         passport.authenticate('local.inicio', {
-            successRedirect: '/perfil',
+            successRedirect: '/perfil/seminarios',
             failureRedirect: '/inicio',
             failureFlash: true
         })(req, res, next);
@@ -46,7 +46,7 @@ router.post('/inicio', (req, res, next) => {
 
 router.post('/inicio/:id', (req, res, next) => {
     passport.authenticate('local.inicio_alter', {
-        successRedirect: '/perfil',
+        successRedirect: '/perfil/seminarios',
         failureRedirect: '/inicio/' + req.params.id,
         failureFlash: true
     })(req, res, next);

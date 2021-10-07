@@ -68,6 +68,10 @@
                     <a class="btn btn-danger"  disabled="disabled">
                         Ya eres ponente
                     </a>
+                {{else if pidioPonente }}
+                    <a class="btn btn-danger"  disabled="disabled">
+                        Ya pidio ser ponente, espere su turno por favor
+                    </a>
                 {{else}}
                     <a class="btn btn-secondary" href="usuarios/pedirPonente">
                         Pedir ser ponente
