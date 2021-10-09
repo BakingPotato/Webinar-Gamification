@@ -64,6 +64,16 @@ input{
   justify-content: center;
 }
 
+.container_popup_confirmacion {
+  padding-top: 2%;
+  padding-left: 5%;
+  padding-right: 5%;
+  float: left;
+  width: 50%;
+  display: inline-flex;
+  justify-content: center;
+}
+
 .container_perfilA {
     width: 100;
     vertical-align: top;

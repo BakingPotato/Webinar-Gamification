@@ -134,6 +134,12 @@ router.post('/PerfilA/actualizarSeminario', isLoggedInAndAdmin, async (req, res)
     res.redirect('/PerfilA/seminarios');
 });
 
+router.post('/PerfilA/eliminarSeminario', isLoggedInAndAdmin, async (req, res) => {
+    await dbConnect.prototype.eliminarSeminario(req);
+    req.flash('success', 'El seminario se elimino correctamente');
+    res.redirect('/PerfilA/seminarios');
+});
+
 router.get('/PerfilA/seminario/administrador/:id', isLoggedInAndAdmin, async (req, res) => {
     const { id }  = req.params;
     await dbConnect.prototype.registrarseEnSeminario(req.session.usuario.DS_CORREO, id);

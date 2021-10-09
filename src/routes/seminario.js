@@ -135,7 +135,7 @@ router.get('/seminario/preguntas/votar/:id', isLoggedIn, async (req, res) => {
         // req.session.seminario.preguntas[id].VOTADO = true;
         // req.session.seminario.preguntas[id].NM_VOTOS += 5;
         req.session.seminario.preguntas = null;
-        req.body.puntuacion = 3;
+        req.body.puntuacion = 1;
         await dbConnect.prototype.votarPregunta(req);
         req.flash("success", "Su voto fue emitido con éxito");
         res.redirect('/seminario/preguntas');    
@@ -145,7 +145,7 @@ router.get('/seminario/preguntas/votar/:id', isLoggedIn, async (req, res) => {
 router.get('/seminario/preguntas/desvotar', isLoggedIn, async (req, res) => {
         const id  = req.query.CD_CUESTION;
         req.session.seminario.preguntas = null;
-        req.body.puntuacion = 3;
+        req.body.puntuacion = 1;
         await dbConnect.prototype.desvotarPregunta(req);
         req.session.seminario.preguntas = null;
         req.flash("success", "Su voto fue retirado con éxito");

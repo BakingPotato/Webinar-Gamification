@@ -207,6 +207,14 @@ class databaseConnect extends IDriver {
         return result.returnValue;
     }
 
+    async eliminarSeminario(req){
+        const request = new pool.Request();
+        const result = await request
+        .input("CD_SEMINARIO", pool.Int, req.body.CD_SEMINARIO)
+        .execute('ELIMINAR_SEMINARIO')
+        return result.returnValue;
+    }
+
     //BLOQUE Preguntas
 
     async getPreguntas(req){

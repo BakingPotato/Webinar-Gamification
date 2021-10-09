@@ -42,10 +42,10 @@
                     <div class="form-group">
                         <button type="submit" id="btn_a" class="btn btn-success btn-block">Quitar Like</button>
                     </div>
+                </form>
                     <div class="form-group">
                         <button id="btn_b" class="btn btn-danger btn-block" onclick="cerrarDesvotar()">Cancelar</button>
                     </div>
-                </form>
                 </div>
             </div>
         </div>
@@ -61,9 +61,9 @@
     function abrirDesvotar(id, cuestion) {
         document.getElementById("pregunta_desvotada").value = id;
         document.getElementById("text_cuestion").textContent = cuestion
-        document.getElementById("desvotar").style.display = "block";
-        document.getElementById("btn_a").style.display = "block";
-        document.getElementById("btn_b").style.display = "block";
+        document.getElementById("desvotar").style.display = "inline-flex";
+        document.getElementById("btn_a").style.display = "flex";
+        document.getElementById("btn_b").style.display = "flex";
     }
   
     function cerrarDesvotar() {

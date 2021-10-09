@@ -27,16 +27,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Arreglado temporizador de ponencia, ahora muestra el tiempo elegido al crearla
 - Arreglado invitaciones a un seminario, ahora lleva a la url de azure
 
-## [1.1.0] - 05-10-2021
+## [1.1.0] - 10-10-2021
 ### Added
 - Añadido link al correo de bienvenida
   
 ### Changed
+- A los usuarios no admin ya no se les muestra el rol de cada usuario en el ranking de asistente
 - Al acceder a la app los usuarios llegan primero a la lista de espera
+- Al votar/desvotar una pregunta solo se suma/resta un punto
+- Cambiada la interfaz de navegación para agrupar las opciones y hacerlo más legible
 - Cambiado nomenclatura de los votos a las preguntas, ahora son likes
 - Cambiado  el campo votos en preguntas por un emoji de un corazón verde
 - Cambiado texto al pedir ser ponente para que quede mejor redactado
   
 ### Fixed
+- Arreglado el boton cancelar en quitar like, antes lo quitaba aunque le dieras a cancelar
 - Arreglado que pedir ponente se siguiera pudiendo pulsar al acceder a la lista
 - Arreglado que no se sumaran los puntos al ponente tras su ponencia

@@ -3,7 +3,7 @@
     <div class="row">
         <table class="default">
             <caption>Seminarios de interAppctua</caption>
-            <tr><th>Nombre</th><th class="field-big">Descripción</th><th>Fecha</th><th>Autoria</th><th></th><th></th><th></th></tr>
+            <tr><th>Nombre</th><th class="field-big">Descripción</th><th>Fecha</th><th>Autoria</th><th></th><th></th><th></th><th></th></tr>
         {{#each seminarios}}
             <tr><td>{{DS_NOMBRE}}</td><td class="field-big">{{DS_DESCRIPCION}}</td><td>{{FECHA}}</td><td>{{CREADOR}}</td>
             <td><a class="btn btn-success btn-block" onclick="abrirDetalle({{CD_SEMINARIO}}, '{{DS_NOMBRE}}', '{{DS_DESCRIPCION}}', {{TIEMPO_PONENCIA}}, {{FECHA}})">
@@ -14,6 +14,9 @@
             </a></td>
             <td><a id="pop_register_user" class="btn btn-success btn-block" onclick="abrirInvitacion({{CD_SEMINARIO}})">
                 Invitar
+            </a></td>
+            <td><a id="pop_register_user" class="btn btn-danger btn-block" onclick="abrirEliminar({{CD_SEMINARIO}}, '{{DS_NOMBRE}}')">
+                &#128465;
             </a></td>
             </tr>
         {{/each}}
@@ -133,12 +136,37 @@
     </div>
 </div>
 
+<div class="container_popup_confirmacion"  id="eliminar">
+    <div class="card text-center">
+        <div class="card-header">
+            <h3>¿Estas segur@ de querer eliminar este seminario? Los datos se borraran pero se mantendran los puntos ganados durante su duración</h3>
+        </div>
+        <div class="card-body" >
+            <form method="POST" action="/PerfilA/eliminarSeminario" id="eliminarForm" class="form-container">
+                <p class="m-2" id="text_seminario"></div>
+                <input type="number" id="seminario_eliminado" name="CD_SEMINARIO" class="form-control">
+                <div class="form-group">
+                    <button type="submit" id="btn_a" class="btn btn-success btn-block">Eliminar</button>
+                </div>
+            </form>
+            <div class="form-group">
+                <button id="btn_b" class="btn btn-danger btn-block" onclick="cerrarEliminar()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 
     cerrarDetalle();
     document.getElementById("seminario_id").style.display = "none";
     document.getElementById("invitar").style.display = "none";
     document.getElementById("seminario_invitado").style.display = "none";
+    document.getElementById("eliminar").style.display = "none";
+
+    document.getElementById("seminario_eliminado").style.display = "none";
+    document.getElementById("btn_a").style.display = "none";
+    document.getElementById("btn_b").style.display = "none";
 
     function añadirEmail() {
         var html = '<div class="form-group"><input type="text" maxlength="50" name="DS_CORREO[]" placeholder="email@ejemplo.es" class="form-control"></div>';
@@ -175,7 +203,22 @@
 
         document.getElementById("detalle").style.display = "block";
     }
+
     function cerrarDetalle() {
         document.getElementById("detalle").style.display = "none";
+    }
+
+    function abrirEliminar(id, seminario) {
+        document.getElementById("seminario_eliminado").value = id;
+        document.getElementById("text_seminario").textContent = seminario
+        document.getElementById("eliminar").style.display = "inline-flex";
+        document.getElementById("btn_a").style.display = "flex";
+        document.getElementById("btn_b").style.display = "flex";
+    }
+  
+    function cerrarEliminar() {
+        document.getElementById("eliminar").style.display = "none";
+        document.getElementById("btn_a").style.display = "none";
+        document.getElementById("btn_b").style.display = "none";
     }
 </script>
