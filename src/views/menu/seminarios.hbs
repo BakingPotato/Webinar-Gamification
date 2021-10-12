@@ -88,24 +88,6 @@
     </div>
 </div>
 
-{{else}}
-<div class="container p-4">
-    <div class="row">
-        <table class="default">
-            <caption>Seminarios de interAppctua</caption>
-            <tr><th>Nombre</th><th class="field-big">Descripción</th><th>Fecha</th><th></th></tr>
-        {{#each seminarios}}
-            <tr><td>{{DS_NOMBRE}}</td><td class="field-big">{{DS_DESCRIPCION}}</td><td>{{FECHA}}</td>
-            <td><a class="btn btn-success btn-block" href="/perfil/seminario/{{CD_SEMINARIO}}">
-                Entrar
-            </a></td>
-            </tr>
-        {{/each}}
-        </table>
-    </div>
-</div>
-{{/if}}
-
   <div class="div_detalles_seminario" id="detalle">
     <div class="card text-center">
         <div class="card-header">
@@ -155,6 +137,24 @@
         </div>
     </div>
 </div>
+
+{{else}}
+<div class="container p-4">
+    <div class="row">
+        <table class="default">
+            <caption>Seminarios de interAppctua</caption>
+            <tr><th>Nombre</th><th class="field-big">Descripción</th><th>Fecha</th><th></th></tr>
+        {{#each seminarios}}
+            <tr><td>{{DS_NOMBRE}}</td><td class="field-big">{{DS_DESCRIPCION}}</td><td>{{FECHA}}</td>
+            <td><a class="btn btn-success btn-block" href="/perfil/seminario/{{CD_SEMINARIO}}">
+                Entrar
+            </a></td>
+            </tr>
+        {{/each}}
+        </table>
+    </div>
+</div>
+{{/if}}
 
 <script>
 

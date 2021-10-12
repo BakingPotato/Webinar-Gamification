@@ -164,12 +164,14 @@ async function getPreguntas(req){
     if(!req.session.seminario.preguntas){
         preguntas = await dbConnect.prototype.getPreguntas(req);
         req.session.seminario.preguntas = {};
+        req.session.seminario.preguntasORD = {};
         for(let i in preguntas){
             req.session.seminario.preguntas[preguntas[i].CD_CUESTION] = preguntas[i];
+            req.session.seminario.preguntasORD[i] = preguntas[i];
         }
     }
     else{
-        preguntas = req.session.seminario.preguntas;
+        preguntas = req.session.seminario.preguntasORD;
     }
     return preguntas;
 }
@@ -179,28 +181,32 @@ async function getPonentes(req){
     if(!req.session.seminario.ponentes){
         ponentes = await dbConnect.prototype.getPonentes(req);
         req.session.seminario.ponentes = {};
+        req.session.seminario.ponentesORD = {};
         for(let i in ponentes){
             req.session.seminario.ponentes[ponentes[i].CD_USUARIO] = ponentes[i];
+            req.session.seminario.ponentesORD[i] = ponentes[i];
         }
         if(req.session.seminario.ponentes[req.session.usuario.CD_USUARIO]) req.session.usuario.ES_PONENTE = true;
     }
     else{
-        ponentes = req.session.seminario.ponentes;
+        ponentes = req.session.seminario.ponentesORD;
     }
     return ponentes;
 }
 
 async function getUsuarios(req){
     let usuarios = {};
-    if(!req.session.seminario.usuarios){
+    if(! req.session.seminario.usuarios){
         usuarios = await dbConnect.prototype.getUsuariosSeminario(req);
         req.session.seminario.usuarios = {};
+        req.session.seminario.usuariosORD = {};
         for(let i in usuarios){
             req.session.seminario.usuarios[usuarios[i].CD_USUARIO] = usuarios[i];
+            req.session.seminario.usuariosORD[i] = usuarios[i];
         }
     }
     else{
-        usuarios = req.session.seminario.usuarios;
+        usuarios = req.session.seminario.usuariosORD;
     }
     return usuarios;
 }

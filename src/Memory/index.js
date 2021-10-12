@@ -102,6 +102,23 @@ class databaseConnect extends IDriver {
     return result.returnValue;
     }
 
+    async actualizarContraseña(req){
+        let pass =  req.body.DS_PASS == ''? null : await helpers.encryptPassword(req.body.DS_PASS) ;
+        const request = new pool.Request();
+        const result = await request
+        .input("CD_USUARIO", pool.Int, req.body.CD_USUARIO)
+        .input("DS_CORREO", pool.VarChar(50), req.body.DS_CORREO ? req.body.DS_CORREO : null)
+        .input("DS_NOMBRE", pool.VarChar(50),  req.body.DS_NOMBRE ?  req.body.DS_NOMBRE : null)
+        .input("DS_DESCRIPCION", pool.VarChar(700),  req.body.DS_DESCRIPCION ? req.body.DS_DESCRIPCION : null)
+        .input("DS_PASS", pool.VarChar(255), pass)
+        .input("DS_TWITTER", pool.VarChar(50),  req.body.DS_TWITTER ?  req.body.DS_TWITTER : null)
+        .execute('ACTUALIZAR_USUARIO')
+        if(result.returnValue != -2){
+            req.session.usuario = {}; req.session.usuario = result.recordset[0];
+        }
+    return result.returnValue;
+    }
+
     async comprobarCorreo(correo){
         const request = new pool.Request();
         const result = await request

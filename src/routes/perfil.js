@@ -5,6 +5,64 @@ const dbConnect = require('../Memory')
 const helpers = require('../lib/helpers');
 const { isLoggedIn, isLoggedInAndAdmin } = require('../lib/auth');
 
+const generateRandomString = (num) => {
+    const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result1= '';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < num; i++ ) {
+        result1 += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result1;
+}
+
+//recuperar contrasela
+router.get('/recuperar', async (req, res) => {
+    res.render('login/recuperar');
+});
+
+router.post('/recuperar', async (req, res) => {
+    let result = await dbConnect.prototype.comprobarCorreo(req.body.DS_CORREO);
+   
+    if(result.recordset.length > 0){
+        req.body.CD_USUARIO = result.recordset[0].CD_USUARIO
+        req.body.DS_PASS = generateRandomString(35);
+        
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'ludonariotfg@gmail.com',
+                pass: 'TFGFinal20-21'
+            }
+            });
+        
+            var mensaje = "Ha sido registrado en la plataforma de interAppctua"
+            var mailOptions = {
+                from: 'ludonariotfg@gmail.com',
+                to: req.body.DS_CORREO,
+                subject: mensaje,
+                html: '<p>Estimado/a prodesor/a.<br><br>Se le ha reseteado su contraseña en <a href="https://interappctua.azurewebsites.net/login/">InterAPPctúa</a>.<br><br> Le informamos que sus nuevos datos de acceso son:<br><br>'
+                +'Nombre de usuario: ' + req.body.DS_CORREO + '<br>Nueva contraseña: ' + req.body.DS_PASS + '<br><br>Le recomendamos que modifique en la zona de su perfil la contraseña.</p>'   
+            };
+        
+            transporter.sendMail(mailOptions, async function(error, info){
+                if (error) {
+                  console.log(error);
+                  req.flash('message', 'Ocurrió un error en el envío, asegurese de que los datos de su correo son correctos y que este tiene activado acceso de aplicaciones poco seguras');
+                  res.redirect('/recuperar');
+                } else {
+                  await dbConnect.prototype.actualizarContraseña(req);
+                  console.log('Email enviado: ' + info.response);
+                  req.flash('message', 'Se reseteo su contraseña, porfavor compruebe su correo')
+                  res.redirect('/inicio');
+                }
+            });
+    }else{
+        req.flash('message', 'No existe un usuario con ese correo aún')
+        res.redirect('/recuperar');
+    }
+});
+
 //Menu de usuario
 router.get('/perfil', isLoggedIn, async (req, res) => {
     if(req.session.usuario.ES_ADMIN == 1){
