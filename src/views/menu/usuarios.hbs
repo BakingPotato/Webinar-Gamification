@@ -4,7 +4,7 @@
             <caption>Usuarios de interAppctua</caption>
             <tr><th>Nombre</th>
             <th class="field-medium">Correo</th>
-            <th>Nombre twitter</th><th class="field-big">Descripción</th><th>Puntos Ponencia</th><th>Puntos Preguntas</th><th>Rol</th><th></th><th></th></tr>
+            <th>Nombre twitter</th><th class="field-big">Descripción</th><th>Puntos Ponencia</th><th>Puntos Preguntas</th><th>Rol</th><th></th><th></th><th></th></tr>
         {{#each usuarios}}
             <tr><td>{{DS_NOMBRE}}</td>
                 <td class="field-medium">{{DS_CORREO}}</td>
@@ -22,6 +22,9 @@
             {{/if}}
             <td><a id="pop_register_user" class="btn btn-success btn-block" onclick="abrirTablaSeminarios('{{DS_CORREO}}')">
                 Invitar
+            </a></td>
+            <td><a id="pop_register_user" class="btn btn-success btn-block" onclick="abrirDetalle('{{CD_USUARIO}}','{{DS_CORREO}}','{{DS_NOMBRE}}','{{DS_TWITTER}}','{{DS_DESCRIPCION}}')">
+                Actualizar
             </a></td>
             </tr>
         {{/each}}
@@ -92,18 +95,82 @@
     </div>
 </div>
 
+<div class="container_datos" id="div_actualizar_usuario">
+    <div class="card text-center">
+        <div class="card-header">
+            <h3>Actualizar Datos</h3>
+        </div>
+        <div class="card-body">
+            <form action="/perfil/actualizarPerfil" method="POST">
+            <div class="form-group" >
+                <input type="number" id="id_id_actualizar" name="CD_USUARIO" class="form-control">
+            </div>
+            <div class="form-group">
+                Correo: <input type="text" id="id_correo_actualizar" maxlength="50" name="DS_CORREO" placeholder="" class="form-control">
+            </div>
+            <div class="form-group">
+                Nombre de usuario: <input type="text"  id="id_nombre_actualizar" maxlength="50" name="DS_NOMBRE" placeholder="" class="form-control">
+            </div>
+            <div class="form-group">
+                Usuario de twitter: <input type="text"  id="id_twitter_actualizar" maxlength="50" name="DS_TWITTER" placeholder="" class="form-control">
+            </div>
+            <div class="form-group">
+                Descripción: <textarea type="text" id="id_descripcion_actualizar" maxlength="700" name="DS_DESCRIPCION" rows="5" cols="60" } class="form-control" title="Incluya aquí una pequeña descripción sobre si mism@">{{user.DS_DESCRIPCION}}</textarea>
+            </div>
+            <div class="form-group">
+                Nueva contraseña: <input type="password"  id="id_pass_actualizar" maxlength="50" name="DS_PASS" placeholder="*****" value = "" class="form-control">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success btn-block">Guardar cambios</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     let correo = "";
+    document.getElementById("div_actualizar_usuario").style.display = "none";
+    document.getElementById("id_id_actualizar").style.display = "none";
+
     document.getElementById("seminarios_actuales").style.display = "none";
 
     function abrirTablaSeminarios(correo_actual) {
         document.getElementById("seminarios_actuales").style.display = "block";
+        document.getElementById("seminarios_actuales").scrollIntoView();
         correo = correo_actual
     }
 
     function abrirNuevoUsuario() {
         document.getElementById("div_nuevo_usuario").style.display = "flex";
+        document.getElementById("div_actualizar_usuario").style.display = "none";
+        document.getElementById("div_nuevo_usuario").scrollIntoView();
         correo = correo_actual
+    }
+
+    function abrirDetalle(id, correo, nombre, twitter, descripcion) {
+        document.getElementById("div_nuevo_usuario").style.display = "none";
+
+        document.getElementById("id_id_actualizar").value = id;
+
+        document.getElementById("id_correo_actualizar").value = correo;
+        document.getElementById("id_correo_actualizar").placeholder = correo;
+
+        document.getElementById("id_nombre_actualizar").innerHTML = nombre;
+        document.getElementById("id_nombre_actualizar").placeholder = nombre;
+
+        document.getElementById("id_twitter_actualizar").value = twitter;
+        document.getElementById("id_twitter_actualizar").placeholder = twitter;
+
+        document.getElementById("id_descripcion_actualizar").innerHTML = descripcion;
+        document.getElementById("id_descripcion_actualizar").placeholder = descripcion;
+
+        document.getElementById("div_actualizar_usuario").style.display = "flex";
+        document.getElementById("div_actualizar_usuario").scrollIntoView();
+    }
+
+    function cerrarDetalle() {
+        document.getElementById("div_actualizar_usuario").style.display = "none";
     }
 
     function Invitar(id){

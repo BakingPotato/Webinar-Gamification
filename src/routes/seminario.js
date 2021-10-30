@@ -111,7 +111,7 @@ router.post('/seminario/usuarios/ponencia/:id', isLoggedInAndAdmin, async (req, 
     const { id }  = req.params;
    await dbConnect.prototype.añadirRoldePonente(req);
     await dbConnect.prototype.votarPonentePonencia(req);
-    req.session.seminario.usuarios[id].ES_PONENTE = 1;
+    req.session.seminario.usuarios = null;
     req.session.seminario.ponentes = null;
     req.flash('success', 'La ponencia ha acabado')
     res.redirect('/seminario/usuarios');

@@ -57,3 +57,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Arreglado que la tabla de asistentes se desordene al actualizar la página
 - Arreglado que la tabla de ponentes se desordene al actualizar la página
 - Arreglado que la tabla de preguntas se desordene al actualizar la página
+
+## [1.2.1] - 27-10-2021
+### Added
+- Añadido scroll automatico al pulsar varias opciones de las tablas
+
+### Changed
+- Ahora al terminar la ponencia se abre la página de ponentes en vez de la de usuarios
+
+## [1.2.2] - 30-10-2021
+### Added
+- Añadido boton de actualizar usuarios para admins
+
+### Changed
+- Ahora al terminar la ponencia se abre la página de asistentes de nuevo
+- Cambiado logaritmo de puntuación al hacer ponencia para que premie más cuanto más cerca se este de agotar el tiempo

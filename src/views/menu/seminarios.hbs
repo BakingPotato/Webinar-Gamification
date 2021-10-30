@@ -43,7 +43,7 @@
                 Nombre: <input type="text" maxlength="50" name="DS_NOMBRE" placeholder="Seminario" class="form-control" required>
             </div>
             <div class="form-group">
-                Fecha: <input type="date" id="fecha_seminario" name="FECHA" value='05-05-2020'>
+                Fecha: <input type="date" id="fecha_seminario" name="FECHA" value='05-05-2020' required>
             </div>
             <div class="form-group">
                 Descripción: <textarea type="text" maxlength="700" name="DS_DESCRIPCION" rows="5" cols="60" placeholder="Pequeña descripción del seminario" class="form-control" required></textarea>
@@ -176,11 +176,13 @@
     function abrirInvitacion(id) {
         document.getElementById("seminario_invitado").value = id;
         document.getElementById("invitar").style.display = "block";
+        document.getElementById("invitar").scrollIntoView();
     }
 
     function abrirNuevoSeminario() {
         cerrarDetalle();
         document.getElementById("div_nuevo_seminario").style.display = "inline-flex";
+        document.getElementById("div_nuevo_seminario").scrollIntoView();
     }
 
     function cerrarInvitacion() {
@@ -202,6 +204,7 @@
         document.getElementById("seminario_tiempo").placeholder = tiempo;
 
         document.getElementById("detalle").style.display = "block";
+        document.getElementById("detalle").scrollIntoView();
     }
 
     function cerrarDetalle() {
@@ -214,6 +217,7 @@
         document.getElementById("eliminar").style.display = "inline-flex";
         document.getElementById("btn_a").style.display = "flex";
         document.getElementById("btn_b").style.display = "flex";
+        document.getElementById("eliminar").scrollIntoView();
     }
   
     function cerrarEliminar() {

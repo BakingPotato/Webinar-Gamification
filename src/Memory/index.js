@@ -88,8 +88,10 @@ class databaseConnect extends IDriver {
     async actualizarUsuario(req){
         let pass =  req.body.DS_PASS == ''? null : await helpers.encryptPassword(req.body.DS_PASS) ;
         const request = new pool.Request();
+        //Si el id esta en el body usamos ese, si no, usamos el de la sesion del usuario
+        let id = req.body.CD_USUARIO ? req.body.CD_USUARIO : req.session.usuario.CD_USUARIO;
         const result = await request
-        .input("CD_USUARIO", pool.Int, req.session.usuario.CD_USUARIO)
+        .input("CD_USUARIO", pool.Int, id)
         .input("DS_CORREO", pool.VarChar(50), req.body.DS_CORREO ? req.body.DS_CORREO : null)
         .input("DS_NOMBRE", pool.VarChar(50),  req.body.DS_NOMBRE ?  req.body.DS_NOMBRE : null)
         .input("DS_DESCRIPCION", pool.VarChar(700),  req.body.DS_DESCRIPCION ? req.body.DS_DESCRIPCION : null)

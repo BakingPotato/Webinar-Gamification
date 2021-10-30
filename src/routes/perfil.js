@@ -36,7 +36,7 @@ router.post('/recuperar', async (req, res) => {
             }
             });
         
-            var mensaje = "Ha sido registrado en la plataforma de interAppctua"
+            var mensaje = "Su contraseña en interAppctua ha sido reseteada"
             var mailOptions = {
                 from: 'ludonariotfg@gmail.com',
                 to: req.body.DS_CORREO,
@@ -107,7 +107,9 @@ router.post('/perfil/actualizarPerfil', isLoggedIn, async (req, res) => {
     }else{
         req.flash('success', 'Su usuario se actualizo correctamente');
     }
-    if(req.session.usuario.ES_ADMIN == 0){
+    if(req.body.CD_USUARIO){
+        res.redirect('/PerfilA/usuarios');
+    }else if(req.session.usuario.ES_ADMIN == 0){
         res.redirect('/perfil');
     }else{
         res.redirect('/PerfilA');

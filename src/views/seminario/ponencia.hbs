@@ -35,7 +35,8 @@
             let distance = end - now;
             if (distance < 0) {
                 if(puntuacion > 0){
-                    puntuacion -= 0.01;
+                    //Logaritmo de castigo
+                    puntuacion -= 0.05;
                 }else{
                     clearInterval(timer);
                 }
@@ -43,7 +44,15 @@
             }else{
                 var minutes = Math.floor((distance % _hour) / _minute);
                 var seconds = Math.floor((distance % _minute) / _second);
-                puntuacion += 0.01;
+                let multiplier;
+                //Esta parte aunmenta cuanta puntuación se gana según más se acerca al 00:00
+                if(({{tiempo}} - minutes) > 0){
+                    multiplier = 1;
+                }else{
+                    multiplier = {{tiempo}} - minutes;
+                }
+                //Logaritmo de puntuación
+                puntuacion += 0.01 * multiplier;
                 document.getElementById('countdown').innerHTML ='';
                 if(seconds < 10)
                     document.getElementById('countdown').innerHTML = '0' + minutes + ':0' + seconds;
